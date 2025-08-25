@@ -17,13 +17,12 @@ export class Login {
     this.accountService.login(this.creds).subscribe({
       next: res => {
         console.log(res);
-        this.LoggedIn.set(true);
+        this.creds={};
       },
       error: err => console.error('Login failed:', err)
     });
   }
   logout() {
-    this.LoggedIn.set
-      (false);
+    this.accountService.logout();
   }
 }

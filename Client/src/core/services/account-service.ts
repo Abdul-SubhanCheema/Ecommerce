@@ -8,7 +8,7 @@ import { tap } from 'rxjs';
 })
 export class AccountService {
   private http=inject(HttpClient);
-  private CurrentUser=signal<User | null>(null);
+  CurrentUser=signal<User | null>(null);
 
   baseUrl="http://localhost:5262/api";
 
@@ -22,6 +22,7 @@ export class AccountService {
       })
     );
   }
+
   logout(){
     localStorage.removeItem("user");
     this.CurrentUser.set(null);

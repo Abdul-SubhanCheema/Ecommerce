@@ -1,0 +1,9 @@
+<app-nav/>
+<app-login/>
+<h2 class="text-3xl font-bold underline">{{title}}</h2>
+
+<ul >
+    @for (user of UsersList(); track user.id) {
+        <ol>{{user.id}}-{{user.userName}}-{{user.email}}</ol>
+    }
+</ul>

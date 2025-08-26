@@ -1,60 +1,64 @@
-<nav class="navbar bg-orange-600 text-white px-6 py-3 shadow-lg">
+<nav class="navbar bg-orange-600 text-white px-6 py-3 shadow-lg fixed top-0 left-0 w-full z-50">
   <div class="flex-1 flex items-center">
     <!-- Brand / Logo -->
-    <a href="/" class=" normal-case text-2xl font-bold tracking-wide text-white">
+    <a (click)="logout()" routerLink="/"
+      class="text-2xl font-bold tracking-wide text-white hover:scale-105 transition-transform">
       ShopEase
     </a>
   </div>
 
-  <!-- Search Bar (visible on md+) -->
-  <!-- <div class="hidden md:flex flex-1 mx-6">
-    <input 
-      type="text" 
-      placeholder="Search products..." 
-      class="input input-bordered input-sm w-full rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400 text-black"
-    />
-  </div> -->
+  <!-- Desktop Nav -->
+  <div class="flex-none hidden md:flex items-center space-x-6">
+    <a routerLink="/products" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
+      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">Products</a>
+    <a routerLink="/categories" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
+      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">Categories</a>
+    <a routerLink="/deals" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
+      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">Deals</a>
+    <a routerLink="/about" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
+      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">About Us</a>
+   
+    <!-- Logout if logged in -->
+    @if (accountService.CurrentUser()) {
+    <button (click)="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md transition font-semibold">
+      Logout
+    </button>
+    }
 
-  <!-- Nav Links & Cart -->
-  <div class="flex-none flex items-center space-x-4">
+  </div>
 
-    <!-- Navigation Links (hidden on small screens) -->
-    <ul class="menu menu-horizontal px-1 text-white hidden md:flex">
-      <li><a href="/products" class="hover:bg-orange-700 rounded-md px-3 py-1">Products</a></li>
-      <li><a href="/categories" class="hover:bg-orange-700 rounded-md px-3 py-1">Categories</a></li>
-      <li><a href="/deals" class="hover:bg-orange-700 rounded-md px-3 py-1">Deals</a></li>
-      <li><a href="/contact" class="hover:bg-orange-700 rounded-md px-3 py-1">Contact</a></li>
+  <!-- Cart Button -->
+  <button class="btn btn-ghost btn-circle relative ml-4">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+      stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+      <circle cx="7" cy="21" r="1" />
+      <circle cx="17" cy="21" r="1" />
+    </svg>
+    <span class="badge badge-sm badge-secondary absolute top-0 right-0 translate-x-1/2 -translate-y-1/2">3</span>
+  </button>
+
+  <!-- Mobile Hamburger -->
+  <div class="dropdown dropdown-end md:hidden ml-2">
+    <label tabindex="0" class="btn btn-ghost btn-circle">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+        stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </label>
+    <ul tabindex="0"
+      class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-orange-700 rounded-box w-52 text-white z-[60]" #menu>
+      <li><a routerLink="/products" (click)="menu.blur()">Products</a></li>
+      <li><a routerLink="/categories" (click)="menu.blur()">Categories</a></li>
+      <li><a routerLink="/deals" (click)="menu.blur()">Deals</a></li>
+      <li><a routerLink="/about" (click)="menu.blur()">About Us</a></li>
+
+
+      @if (accountService.CurrentUser()) {
+      <li><a (click)="logout(); menu.blur()">Logout</a></li>
+      }
     </ul>
 
-    <!-- Cart Button -->
-    <button class="btn btn-ghost btn-circle relative">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" 
-           viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" 
-              d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
-        <circle cx="7" cy="21" r="1" />
-        <circle cx="17" cy="21" r="1" />
-      </svg>
-      <!-- Cart Count Badge -->
-      <span class="badge badge-sm badge-secondary absolute top-0 right-0 translate-x-1/2 -translate-y-1/2">3</span>
-    </button>
-
-    <!-- Mobile Hamburger -->
-    <div class="dropdown dropdown-end md:hidden">
-      <label tabindex="0" class="btn btn-ghost btn-circle">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" 
-             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" 
-                d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-      </label>
-      <ul tabindex="0" class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-orange-700 rounded-box w-52 text-white">
-        <li><a href="/products">Products</a></li>
-        <li><a href="/categories">Categories</a></li>
-        <li><a href="/deals">Deals</a></li>
-        <li><a href="/contact">Contact</a></li>
-      </ul>
-    </div>
 
   </div>
 </nav>

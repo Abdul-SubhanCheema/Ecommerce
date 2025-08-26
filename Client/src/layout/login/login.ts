@@ -1,6 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
+import { Router } from '@angular/router';
+import { ToastService } from '../../core/services/toast-service';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +12,8 @@ import { AccountService } from '../../core/services/account-service';
 })
 export class Login {
   private accountService = inject(AccountService);
+  private toast=inject(ToastService);
+  private router=inject(Router);
   protected creds: any = {};
   protected LoggedIn = signal(false);
 
@@ -17,12 +21,18 @@ export class Login {
     this.accountService.login(this.creds).subscribe({
       next: res => {
         console.log(res);
+        this.toast.success("Logged in Successfully");
+        this.router.navigateByUrl("/adminhome");
         this.creds={};
       },
-      error: err => console.error('Login failed:', err)
+      error: err => {
+        console.error('Login failed:', err)
+        this.toast.error(err.error)
+      }
     });
   }
   logout() {
     this.accountService.logout();
+    this.router.navigateByUrl("/");
   }
 }

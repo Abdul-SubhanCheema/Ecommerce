@@ -17,14 +17,17 @@
       class="hover:bg-orange-700 px-3 py-1 rounded-md transition">Deals</a>
     <a routerLink="/about" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
       class="hover:bg-orange-700 px-3 py-1 rounded-md transition">About Us</a>
-   
+    @if (accountService.CurrentUser()) {
+    <a routerLink="/adminhome" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
+      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">Home</a>
+    }
+
     <!-- Logout if logged in -->
     @if (accountService.CurrentUser()) {
     <button (click)="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md transition font-semibold">
       Logout
     </button>
     }
-
   </div>
 
   <!-- Cart Button -->
@@ -52,6 +55,9 @@
       <li><a routerLink="/categories" (click)="menu.blur()">Categories</a></li>
       <li><a routerLink="/deals" (click)="menu.blur()">Deals</a></li>
       <li><a routerLink="/about" (click)="menu.blur()">About Us</a></li>
+      @if (accountService.CurrentUser()) {
+        <li><a routerLink="/adminhome" (click)="menu.blur()">Home</a></li>
+      }
 
 
       @if (accountService.CurrentUser()) {

@@ -1,5 +1,3 @@
-using System;
-
 namespace API.Errors;
 
 public class ApiExceptions(int code,string msg,string details)

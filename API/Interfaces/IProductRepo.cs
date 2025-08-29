@@ -11,4 +11,5 @@ public interface IProductRepo
     Task<Product?> GetProductByIdSAsync(string Id);
 
     Task<IReadOnlyList<Photo>> GetPhotosForProductAsync(string Id);
+    Task Add(Product product);
 }

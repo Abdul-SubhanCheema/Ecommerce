@@ -6,5 +6,8 @@ public class Photo
     public required string Url { get; set; }
     public string? PublicId { get; set; }
 
-    public Product Product { get; set; } = null!;
+  // Foreign key
+    public string? ProductId { get; set; } = null!;
+    
+
 }

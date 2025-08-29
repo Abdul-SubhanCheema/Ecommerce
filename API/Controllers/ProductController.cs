@@ -16,7 +16,7 @@ namespace API.Controllers
             return Ok(products);
         }
 
-    
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Product>> GetProductById(string id)
         {
@@ -25,7 +25,7 @@ namespace API.Controllers
             return Ok(product);
         }
 
-      
+
         [HttpGet("{id}/photos")]
         public async Task<ActionResult<IReadOnlyList<Photo>>> GetPhotosForProduct(string id)
         {
@@ -34,7 +34,7 @@ namespace API.Controllers
             return Ok(photos);
         }
 
-        
+
         [HttpPut("{id}")]
         public async Task<ActionResult> UpdateProduct(string id, Product product)
         {
@@ -48,5 +48,21 @@ namespace API.Controllers
             return BadRequest("Failed to update product.");
         }
 
+
+        // 🚀 POST add new product with photos
+        [HttpPost]
+        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        {
+            // Add product to context
+           await _productRepo.Add(product);
+
+            if (await _productRepo.SaveAllAsync())
+            {
+                // Return 201 Created with route to newly added product
+                return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, product);
+            }
+
+            return BadRequest("Failed to create product.");
+        }
     }
 }

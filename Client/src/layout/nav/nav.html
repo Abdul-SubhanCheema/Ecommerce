@@ -1,72 +1,160 @@
-<nav class="navbar bg-orange-600 text-white px-6 py-3 shadow-lg fixed top-0 left-0 w-full z-50">
-  <div class="flex-1 flex items-center">
+<nav class="navbar bg-white/95 backdrop-blur-md shadow-lg border-b border-orange-100 px-6 py-4 fixed top-0 left-0 w-full z-50">
+  <div class="container-custom flex items-center justify-between">
+    
     <!-- Brand / Logo -->
-    <a (click)="logout()" routerLink="/"
-      class="text-2xl font-bold tracking-wide text-white hover:scale-105 transition-transform">
-      ShopEase
-    </a>
-  </div>
+    <div class="flex items-center space-x-4">
+      <a (click)="logout()" routerLink="/" class="flex items-center space-x-2 group">
+        <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+          </svg>
+        </div>
+        <span class="text-2xl font-bold text-gradient">ShopEase</span>
+      </a>
+    </div>
 
-  <!-- Desktop Nav -->
-  <div class="flex-none hidden md:flex items-center space-x-6">
-    <a routerLink="/products" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
-      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">Products</a>
-    <a routerLink="/categories" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
-      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">Categories</a>
-    <a routerLink="/deals" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
-      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">Deals</a>
-    <a routerLink="/about" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
-      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">About Us</a>
-    @if (accountService.CurrentUser()) {
-    <a routerLink="/adminhome" routerLinkActive="text-black bg-white px-3 py-1 rounded-md"
-      class="hover:bg-orange-700 px-3 py-1 rounded-md transition">Home</a>
-    }
-
-    <!-- Logout if logged in -->
-    @if (accountService.CurrentUser()) {
-    <button (click)="logout()" class="bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md transition font-semibold">
-      Logout
-    </button>
-    }
-  </div>
-  @if(!accountService.CurrentUser()){
-<!-- Cart Button -->
-  <button class="btn btn-ghost btn-circle relative ml-4">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-      stroke-width="2">
-      <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
-      <circle cx="7" cy="21" r="1" />
-      <circle cx="17" cy="21" r="1" />
-    </svg>
-    <span class="badge badge-sm badge-secondary absolute top-0 right-0 translate-x-1/2 -translate-y-1/2">3</span>
-  </button>
-  }
-  
-
-  <!-- Mobile Hamburger -->
-  <div class="dropdown dropdown-end md:hidden ml-2">
-    <label tabindex="0" class="btn btn-ghost btn-circle">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-        stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </label>
-    <ul tabindex="0"
-      class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-orange-700 rounded-box w-52 text-white z-[60]" #menu>
-      <li><a routerLink="/products" (click)="menu.blur()">Products</a></li>
-      <li><a routerLink="/categories" (click)="menu.blur()">Categories</a></li>
-      <li><a routerLink="/deals" (click)="menu.blur()">Deals</a></li>
-      <li><a routerLink="/about" (click)="menu.blur()">About Us</a></li>
+    <!-- Desktop Navigation -->
+    <div class="hidden lg:flex items-center space-x-1">
+      <a routerLink="/Products-list" 
+         routerLinkActive="bg-orange-100 text-orange-700" 
+         class="px-4 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-all duration-200 font-medium">
+        Products
+      </a>
+      <a routerLink="/categories" 
+         routerLinkActive="bg-orange-100 text-orange-700" 
+         class="px-4 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-all duration-200 font-medium">
+        Categories
+      </a>
+      <a routerLink="/deals" 
+         routerLinkActive="bg-orange-100 text-orange-700" 
+         class="px-4 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-all duration-200 font-medium">
+        Deals
+      </a>
+      <a routerLink="/about" 
+         routerLinkActive="bg-orange-100 text-orange-700" 
+         class="px-4 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-all duration-200 font-medium">
+        About Us
+      </a>
       @if (accountService.CurrentUser()) {
-        <li><a routerLink="/adminhome" (click)="menu.blur()">Home</a></li>
+        <a routerLink="/adminhome" 
+           routerLinkActive="bg-orange-100 text-orange-700" 
+           class="px-4 py-2 rounded-lg text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-all duration-200 font-medium">
+          Dashboard
+        </a>
+      }
+    </div>
+
+    <!-- Right Side Actions -->
+    <div class="flex items-center space-x-4">
+      
+      @if(!accountService.CurrentUser()){
+        <!-- Search Button -->
+        <button class="p-2 rounded-lg hover:bg-orange-50 text-gray-600 hover:text-orange-600 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+          </svg>
+        </button>
+
+        <!-- Cart Button -->
+        <button class="relative p-2 rounded-lg hover:bg-orange-50 text-gray-600 hover:text-orange-600 transition-colors">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
+            <circle cx="7" cy="21" r="1" />
+            <circle cx="17" cy="21" r="1" />
+          </svg>
+          <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">3</span>
+        </button>
+
+        <!-- Login/Signup Button -->
+        <a routerLink="/login" class="btn-orange text-sm px-4 py-2">
+          Sign In
+        </a>
       }
 
-
       @if (accountService.CurrentUser()) {
-      <li><a (click)="logout(); menu.blur()">Logout</a></li>
+        <!-- User Profile Dropdown -->
+        <div class="relative dropdown dropdown-end">
+          <label tabindex="0" class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-orange-50 transition-colors">
+            <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center">
+              <span class="text-white font-semibold text-sm">U</span>
+            </div>
+            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </label>
+          <ul tabindex="0" class="dropdown-content menu p-2 shadow-xl bg-white rounded-xl w-52 border border-gray-100">
+            <li><a class="text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg">Profile</a></li>
+            <li><a class="text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg">Orders</a></li>
+            <li><a class="text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg">Settings</a></li>
+            <div class="divider my-1"></div>
+            <li><a (click)="logout()" class="text-red-600 hover:bg-red-50 rounded-lg">Logout</a></li>
+          </ul>
+        </div>
       }
-    </ul>
 
+      <!-- Mobile Menu Button -->
+      <div class="lg:hidden">
+        <button (click)="toggleMobileMenu()" class="p-2 rounded-lg hover:bg-orange-50 text-gray-600 hover:text-orange-600 transition-colors">
+          <svg [class]="isMobileMenuOpen ? 'hidden' : 'block'" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg [class]="isMobileMenuOpen ? 'block' : 'hidden'" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
 
+  <!-- Mobile Menu -->
+  <div [class]="isMobileMenuOpen ? 'block' : 'hidden'" class="lg:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-md shadow-lg border-t border-gray-100 animate-slideIn">
+    <div class="container-custom py-4">
+      <div class="flex flex-col space-y-2">
+        <a routerLink="/Products-list" 
+           (click)="closeMobileMenu()" 
+           routerLinkActive="bg-orange-100 text-orange-700"
+           class="px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors font-medium">
+           Products
+        </a>
+        <a routerLink="/categories" 
+           (click)="closeMobileMenu()" 
+           routerLinkActive="bg-orange-100 text-orange-700"
+           class="px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors font-medium">
+           Categories
+        </a>
+        <a routerLink="/deals" 
+           (click)="closeMobileMenu()" 
+           routerLinkActive="bg-orange-100 text-orange-700"
+           class="px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors font-medium">
+           Deals
+        </a>
+        <a routerLink="/about" 
+           (click)="closeMobileMenu()" 
+           routerLinkActive="bg-orange-100 text-orange-700"
+           class="px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors font-medium">
+           About Us
+        </a>
+        @if (accountService.CurrentUser()) {
+          <a routerLink="/adminhome" 
+             (click)="closeMobileMenu()" 
+             routerLinkActive="bg-orange-100 text-orange-700"
+             class="px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors font-medium">
+             Dashboard
+          </a>
+          <div class="border-t border-gray-200 my-2"></div>
+          <button (click)="logout(); closeMobileMenu()" 
+                  class="px-4 py-3 text-left text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium w-full">
+                  Logout
+          </button>
+        } @else {
+          <div class="border-t border-gray-200 my-2"></div>
+          <a routerLink="/login" 
+             (click)="closeMobileMenu()" 
+             class="mx-4 mt-2 btn-orange text-center">
+             Sign In
+          </a>
+        }
+      </div>
+    </div>
   </div>
 </nav>

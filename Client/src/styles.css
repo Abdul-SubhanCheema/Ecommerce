@@ -3,3 +3,104 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+/* Custom Orange Theme Variables */
+:root {
+  --orange-50: #fff7ed;
+  --orange-100: #ffedd5;
+  --orange-200: #fed7aa;
+  --orange-300: #fdba74;
+  --orange-400: #fb923c;
+  --orange-500: #f97316;
+  --orange-600: #ea580c;
+  --orange-700: #c2410c;
+  --orange-800: #9a3412;
+  --orange-900: #7c2d12;
+  
+  /* Navigation height - calculated as py-4 (2rem) + content height (~3rem) */
+  --navbar-height: 5rem;
+}
+
+/* Global Styles */
+* {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  min-height: 100vh;
+}
+
+/* Main content area that accounts for fixed navbar */
+.main-content {
+  padding-top: var(--navbar-height);
+  min-height: 100vh;
+}
+
+/* For full-height pages (like about, login) that need to account for navbar */
+.full-height-page {
+  min-height: calc(100vh - var(--navbar-height));
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn { animation: fadeIn 0.6s ease-out; }
+.animate-slideIn { animation: slideIn 0.5s ease-out; }
+.animate-scaleIn { animation: scaleIn 0.4s ease-out; }
+
+/* Custom Card Hover Effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Custom Button Styles */
+.btn-orange {
+  @apply bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105;
+}
+
+.btn-orange-outline {
+  @apply border-2 border-orange-600 text-orange-600 hover:bg-orange-600 hover:text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300;
+}
+
+/* Loading Animation */
+.loading-orange {
+  @apply animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600;
+}
+
+/* Custom Badge */
+.badge-orange {
+  @apply bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-xs font-medium;
+}
+
+/* Gradient Text */
+.text-gradient {
+  background: linear-gradient(135deg, #ea580c, #f97316);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom Container */
+.container-custom {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+

@@ -1,8 +1,8 @@
 export type Photo= {
   id: number;
   url: string;
-  publicId?: string; // optional
-  productId: string; // FK reference
+  publicId?: string; 
+  productId: string; 
 }
 
 export type Product= {

@@ -10,8 +10,17 @@ import { AccountService } from '../../core/services/account-service';
 })
 export class Nav {
   protected accountService = inject(AccountService);
+  protected isMobileMenuOpen = false;
 
   logout() {
     this.accountService.logout();
+  }
+
+  toggleMobileMenu() {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu() {
+    this.isMobileMenuOpen = false;
   }
 }

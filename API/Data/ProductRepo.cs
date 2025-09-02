@@ -8,7 +8,9 @@ public class ProductRepo(AppDbContext context) : IProductRepo
 {
     public async Task<IReadOnlyList<Product>> GetAllProducts()
     {
-        return await context.Product.ToListAsync();
+        return await context.Product
+            .Include(p => p.Photos)
+            .ToListAsync();
     }
 
     public async Task<IReadOnlyList<Photo>> GetPhotosForProductAsync(string Id)
@@ -19,7 +21,9 @@ public class ProductRepo(AppDbContext context) : IProductRepo
 
     public async Task<Product?> GetProductByIdSAsync(string Id)
     {
-        return await context.Product.FindAsync(Id);
+        return await context.Product
+            .Include(p => p.Photos)
+            .FirstOrDefaultAsync(p => p.Id == Id);
     }
 
     public async Task<bool> SaveAllAsync()

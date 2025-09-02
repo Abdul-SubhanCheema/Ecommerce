@@ -71,7 +71,7 @@
                [style.animation-delay]="(i * 100) + 'ms'">
             
             <!-- Product Image -->
-            <div class="relative overflow-hidden">
+            <div class="relative overflow-hidden cursor-pointer" [routerLink]="['/productdetail', product.id]">
               <img 
                 [src]="product.productImageUrl || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'" 
                 [alt]="product.productName"
@@ -82,7 +82,7 @@
                 <span class="badge-orange">New</span>
               </div>
               <div class="absolute top-4 right-4">
-                <button class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg">
+                <button class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg" (click)="$event.stopPropagation()">
                   <svg class="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                   </svg>
@@ -92,7 +92,7 @@
               <!-- Quick View on Hover -->
               <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <button class="btn-orange-outline bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white hover:text-orange-600">
-                  Quick View
+                  View Details
                 </button>
               </div>
             </div>
@@ -103,7 +103,8 @@
               <p class="text-sm text-orange-600 font-medium mb-2 uppercase tracking-wide">Electronics</p>
               
               <!-- Product Name -->
-              <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors">
+              <h3 class="text-lg font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors cursor-pointer" 
+                  [routerLink]="['/productdetail', product.id]">
                 {{product.productName}}
               </h3>
               
@@ -127,12 +128,17 @@
               <!-- Price and Actions -->
               <div class="flex items-center justify-between">
                 <div class="flex flex-col">
-                  <span class="text-2xl font-bold text-orange-600">${{product.price}}</span>
-                  <span class="text-sm text-gray-400 line-through">${{(product.price * 1.2).toFixed(2)}}</span>
+                  <span class="text-2xl font-bold text-orange-600">${{getDiscountedPrice(product.price, product.discount).toFixed(2)}}</span>
+                  @if (hasDiscount(product.discount)) {
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm text-gray-400 line-through">${{product.price.toFixed(2)}}</span>
+                      <span class="bg-red-100 text-red-800 text-xs px-1.5 py-0.5 rounded">-{{product.discount}}%</span>
+                    </div>
+                  }
                 </div>
                 
                 <div class="flex gap-2">
-                  <button class="btn-orange text-sm px-4 py-2 flex items-center gap-2">
+                  <button class="btn-orange text-sm px-4 py-2 flex items-center gap-2" (click)="$event.stopPropagation()">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
                     </svg>

@@ -23,7 +23,6 @@ export class Login {
         console.log(res);
         this.toast.success("Logged in Successfully");
         this.router.navigateByUrl("/adminhome");
-        this.creds={};
       },
       error: err => {
         console.error('Login failed:', err)

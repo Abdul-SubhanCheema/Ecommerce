@@ -1,14 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ProductService } from '../services/product-service';
+import { ProductService } from '../services/product.service';
+import { CartService } from '../services/cart.service';
 import { Product } from '../../types/product';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable, catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-productdetail',
-  imports: [AsyncPipe, CommonModule, FormsModule],
+  imports: [AsyncPipe, CommonModule, FormsModule, NgClass],
   templateUrl: './productdetail.html',
   styleUrl: './productdetail.css'
 })
@@ -16,12 +17,14 @@ export class Productdetail implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private productService = inject(ProductService);
+  private cartService = inject(CartService);
   
   product$!: Observable<Product | null>;
   productId!: string;
   loading = true;
   error = false;
   selectedImageUrl: string = '';
+  currentProduct: Product | null = null;
   currentImageIndex: number = 0;
   selectedQuantity: number = 1;
 
@@ -39,6 +42,12 @@ export class Productdetail implements OnInit {
             return of(null);
           })
         );
+        
+        // Subscribe to get the current product for cart operations
+        this.product$.subscribe(product => {
+          this.currentProduct = product;
+          this.loading = false;
+        });
       }
     });
   }
@@ -47,11 +56,41 @@ export class Productdetail implements OnInit {
     this.router.navigate(['/Products-list']);
   }
 
+  
+
+  hasDiscount(discount: number): boolean {
+    return discount > 0;
+  }
+
+  getStockStatus(quantity: number): string {
+    if (quantity === 0) return 'Out of Stock';
+    if (quantity <= 5) return 'Low Stock';
+    return 'In Stock';
+  }
+
+  getStockStatusColor(quantity: number): string {
+    if (quantity === 0) return 'text-red-600';
+    if (quantity <= 5) return 'text-yellow-600';
+    return 'text-green-600';
+  }
+
   addToCart() {
-    // TODO: Implement add to cart functionality
-    console.log('Adding product to cart:', this.productId);
-    // You can show a toast notification here
-    alert('Product added to cart!');
+    if (this.currentProduct && this.selectedQuantity > 0) {
+      // Check if product is in stock
+      if (this.currentProduct.quantity < this.selectedQuantity) {
+        alert(`Sorry, only ${this.currentProduct.quantity} items available in stock.`);
+        return;
+      }
+      
+      try {
+        this.cartService.addToCart(this.currentProduct, this.selectedQuantity);
+        alert(`${this.selectedQuantity} ${this.currentProduct.productName}(s) added to cart!`);
+      } catch (error: any) {
+        alert(error.message);
+      }
+    } else {
+      alert('Unable to add product to cart. Please try again.');
+    }
   }
 
   buyNow() {
@@ -61,14 +100,25 @@ export class Productdetail implements OnInit {
     alert('Redirecting to checkout...');
   }
 
-  // Helper method to calculate discounted price
+  // Helper methods
   getDiscountedPrice(originalPrice: number, discount: number): number {
     return originalPrice * (1 - discount / 100);
   }
 
-  // Helper method to calculate savings amount
   getSavingsAmount(originalPrice: number, discount: number): number {
     return originalPrice * (discount / 100);
+  }
+
+ 
+
+  
+
+  isNewArrival(createdAt: string): boolean {
+    const productDate = new Date(createdAt);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - productDate.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays <= 30; // Consider new if created within 30 days
   }
 
   // Carousel functionality

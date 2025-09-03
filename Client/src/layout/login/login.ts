@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../../core/services/account-service';
 import { Router } from '@angular/router';
-import { ToastService } from '../../core/services/toast-service';
+import { ToastService } from '../../core/services/toast.service';
 
 @Component({
   selector: 'app-login',

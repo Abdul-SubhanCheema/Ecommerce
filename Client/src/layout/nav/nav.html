@@ -47,8 +47,7 @@
         }
       </div>
 
-      <!-- Action Buttons (Search, Cart, Auth) -->
-      <!-- Action Buttons (Search, Cart, Auth) -->
+     
       @if(!accountService.CurrentUser()){
         <!-- Search Button -->
         <button class="p-2 rounded-lg hover:bg-orange-50 text-gray-600 hover:text-orange-600 transition-colors">
@@ -58,14 +57,18 @@
         </button>
 
         <!-- Cart Button -->
-        <button class="relative p-2 rounded-lg hover:bg-orange-50 text-gray-600 hover:text-orange-600 transition-colors">
+        <a routerLink="/cart" class="relative p-2 rounded-lg hover:bg-orange-50 text-gray-600 hover:text-orange-600 transition-colors block">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4" />
             <circle cx="7" cy="21" r="1" />
             <circle cx="17" cy="21" r="1" />
           </svg>
-          <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">3</span>
-        </button>
+          @if (cartService.totalItems() > 0) {
+            <span class="absolute -top-1 -right-1 bg-orange-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+              {{cartService.totalItems()}}
+            </span>
+          }
+        </a>
 
         <!-- Login/Signup Button - Hidden on mobile, shown on desktop -->
         <a routerLink="/login" class="hidden lg:flex btn-orange text-sm px-4 py-2">

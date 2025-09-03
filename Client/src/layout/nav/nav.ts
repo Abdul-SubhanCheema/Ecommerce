@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AccountService } from '../../core/services/account-service';
+import { CartService } from '../../core/services/cart.service';
 
 @Component({
   selector: 'app-nav',
@@ -10,6 +11,7 @@ import { AccountService } from '../../core/services/account-service';
 })
 export class Nav {
   protected accountService = inject(AccountService);
+  protected cartService = inject(CartService);
   protected isMobileMenuOpen = false;
 
   logout() {

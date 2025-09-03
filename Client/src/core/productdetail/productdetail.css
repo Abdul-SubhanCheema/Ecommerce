@@ -1,0 +1,13 @@
+/* Custom hover effects for action buttons */
+.action-button:hover {
+  color: white !important;
+}
+
+.action-button:hover svg {
+  color: white !important;
+}
+
+/* Ensure SVG icons also change color on hover */
+.action-button svg {
+  transition: color 0.2s ease;
+}

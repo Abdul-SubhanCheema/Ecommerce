@@ -10,6 +10,20 @@ public class ProductRepo(AppDbContext context) : IProductRepo
     {
         return await context.Product
             .Include(p => p.Photos)
+            .Include(p => p.Category)
+            .Include(p => p.Reviews)
+                .ThenInclude(r => r.User)
+            .ToListAsync();
+    }
+
+    public async Task<IReadOnlyList<Product>> GetProductsByCategoryAsync(int categoryId)
+    {
+        return await context.Product
+            .Include(p => p.Photos)
+            .Include(p => p.Category)
+            .Include(p => p.Reviews)
+                .ThenInclude(r => r.User)
+            .Where(p => p.CategoryId == categoryId)
             .ToListAsync();
     }
 
@@ -23,6 +37,9 @@ public class ProductRepo(AppDbContext context) : IProductRepo
     {
         return await context.Product
             .Include(p => p.Photos)
+            .Include(p => p.Category)
+            .Include(p => p.Reviews)
+                .ThenInclude(r => r.User)
             .FirstOrDefaultAsync(p => p.Id == Id);
     }
 
@@ -35,9 +52,9 @@ public class ProductRepo(AppDbContext context) : IProductRepo
     {
         context.Entry(product).State = EntityState.Modified;
     }
+    
     public async Task Add(Product product)
     {
         await context.Product.AddAsync(product);
     }
-
 }

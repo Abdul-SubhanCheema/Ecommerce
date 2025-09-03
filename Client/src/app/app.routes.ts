@@ -6,6 +6,7 @@ import { authGuard } from '../core/guards/auth-guard';
 import { Notfound } from '../core/notfound/notfound';
 import { Products } from '../core/products/products';
 import { Productdetail } from '../core/productdetail/productdetail';
+import { Cartdetails } from '../core/cartdetails/cartdetails';
 
 export const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -13,6 +14,7 @@ export const routes: Routes = [
     {path:"about",component: About },
     {path:"Products-list",component:Products},
     {path:"productdetail/:id",component:Productdetail},
+    {path:"cart",component:Cartdetails},
     {path:"adminhome",component:Adminhome, canActivate:[authGuard]},
     {path:'**',component:Notfound},
 ];

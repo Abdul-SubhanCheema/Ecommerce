@@ -40,18 +40,18 @@ public class PhotoDto
     public string ProductId { get; set; } = string.Empty;
 }
 
-public class ReviewDto
-{
-    public int Id { get; set; }
-    public string Title { get; set; } = string.Empty;
-    public string Comment { get; set; } = string.Empty;
-    public int Rating { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime? UpdatedAt { get; set; }
-    public string ProductId { get; set; } = string.Empty;
-    public string UserId { get; set; } = string.Empty;
-    public UserSummaryDto User { get; set; } = new();
-}
+// public class ReviewDto
+// {
+//     public int Id { get; set; }
+//     public string Title { get; set; } = string.Empty;
+//     public string Comment { get; set; } = string.Empty;
+//     public int Rating { get; set; }
+//     public DateTime CreatedAt { get; set; }
+//     public DateTime? UpdatedAt { get; set; }
+//     public string ProductId { get; set; } = string.Empty;
+//     public string UserId { get; set; } = string.Empty;
+//     public UserSummaryDto User { get; set; } = new();
+// }
 
 public class UserSummaryDto
 {

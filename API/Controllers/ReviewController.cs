@@ -1,4 +1,5 @@
 using API.Data;
+using API.DTOs;
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,7 @@ public class ReviewController : BaseApiController
     }
 
     [HttpGet("product/{productId}")]
-    public async Task<ActionResult<IEnumerable<Review>>> GetProductReviews(string productId)
+    public async Task<ActionResult<IEnumerable<ReviewDto>>> GetProductReviews(string productId)
     {
         var reviews = await _context.Reviews
             .Include(r => r.User)
@@ -25,7 +26,25 @@ public class ReviewController : BaseApiController
             .OrderByDescending(r => r.CreatedAt)
             .ToListAsync();
 
-        return Ok(reviews);
+        var reviewDtos = reviews.Select(r => new ReviewDto
+        {
+            Id = r.Id,
+            Title = r.Title,
+            Comment = r.Comment,
+            Rating = r.Rating,
+            CreatedAt = r.CreatedAt,
+            UpdatedAt = r.UpdatedAt,
+            ProductId = r.ProductId,
+            UserId = r.UserId,
+            User = new UserSummaryDto
+            {
+                Id = r.User.Id,
+                UserName = r.User.UserName ?? "",
+                Email = r.User.Email ?? ""
+            }
+        }).ToList();
+
+        return Ok(reviewDtos);
     }
 
     [HttpGet("user/{userId}")]
@@ -151,7 +170,7 @@ public class ReviewController : BaseApiController
     }
 
     [HttpGet("stats/product/{productId}")]
-    public async Task<ActionResult> GetProductReviewStats(string productId)
+    public async Task<ActionResult<ReviewStatsDto>> GetProductReviewStats(string productId)
     {
         var reviews = await _context.Reviews
             .Where(r => r.ProductId == productId)
@@ -159,25 +178,32 @@ public class ReviewController : BaseApiController
 
         if (!reviews.Any())
         {
-            return Ok(new
+            return Ok(new ReviewStatsDto
             {
-                totalReviews = 0,
-                averageRating = 0.0,
-                ratingDistribution = new { five = 0, four = 0, three = 0, two = 0, one = 0 }
+                TotalReviews = 0,
+                AverageRating = 0.0,
+                RatingDistribution = new RatingDistributionDto
+                {
+                    Five = 0,
+                    Four = 0,
+                    Three = 0,
+                    Two = 0,
+                    One = 0
+                }
             });
         }
 
-        var stats = new
+        var stats = new ReviewStatsDto
         {
-            totalReviews = reviews.Count,
-            averageRating = Math.Round(reviews.Average(r => r.Rating), 1),
-            ratingDistribution = new
+            TotalReviews = reviews.Count,
+            AverageRating = Math.Round(reviews.Average(r => r.Rating), 1),
+            RatingDistribution = new RatingDistributionDto
             {
-                five = reviews.Count(r => r.Rating == 5),
-                four = reviews.Count(r => r.Rating == 4),
-                three = reviews.Count(r => r.Rating == 3),
-                two = reviews.Count(r => r.Rating == 2),
-                one = reviews.Count(r => r.Rating == 1)
+                Five = reviews.Count(r => r.Rating == 5),
+                Four = reviews.Count(r => r.Rating == 4),
+                Three = reviews.Count(r => r.Rating == 3),
+                Two = reviews.Count(r => r.Rating == 2),
+                One = reviews.Count(r => r.Rating == 1)
             }
         };
 

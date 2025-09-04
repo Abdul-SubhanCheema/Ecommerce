@@ -1,0 +1,46 @@
+<div class="space-y-6" *ngIf="rs.reviews().length || rs.loading() || rs.error()">
+	<!-- Stats -->
+	<div *ngIf="rs.stats() as stats" class="bg-white p-4 rounded-lg shadow border border-gray-100">
+		<div class="flex items-center gap-6">
+			<div>
+				<p class="text-4xl font-bold text-orange-600">{{stats.averageRating.toFixed(1)}}</p>
+				<p class="text-sm text-gray-500">Average Rating</p>
+			</div>
+			<div class="flex-1 grid grid-cols-5 gap-2">
+				<div *ngFor="let star of [5,4,3,2,1]" class="flex items-center gap-2 text-sm">
+					<span class="w-4 text-gray-600">{{star}}</span>
+					<div class="h-2 flex-1 bg-gray-200 rounded">
+						<div class="h-2 bg-orange-500 rounded" [style.width.%]="getRatingPercentage(stats, star)"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Loading -->
+	<div *ngIf="rs.loading()" class="text-gray-500 text-sm">Loading reviews...</div>
+	<div *ngIf="rs.error()" class="text-red-600 text-sm">{{rs.error()}}</div>
+	<div *ngIf="!rs.loading() && !rs.error() && rs.reviews().length===0" class="text-gray-500 text-sm">No reviews yet.</div>
+
+	<!-- Reviews List -->
+	<div class="space-y-4" *ngIf="rs.reviews().length">
+		<div *ngFor="let r of rs.reviews()" class="bg-white p-4 rounded-lg shadow border border-gray-100">
+			<div class="flex justify-between items-start">
+				<div>
+					<p class="font-semibold text-gray-900">{{r.title}}</p>
+					<div class="flex items-center gap-1 text-yellow-400 text-sm">
+						<ng-container *ngFor="let s of [1,2,3,4,5]">
+							<svg class="w-4 h-4" [class.fill-current]="s <= r.rating" [class.text-gray-300]="s > r.rating" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+						</ng-container>
+					</div>
+				</div>
+				<span class="text-xs text-gray-500">{{r.createdAt | date:'mediumDate'}}</span>
+			</div>
+			<p class="text-gray-700 text-sm mt-2 leading-relaxed">{{r.comment}}</p>
+			<div class="mt-3 flex items-center gap-2">
+				<img *ngIf="r.user?.imageUrl" [src]="r.user.imageUrl" class="w-8 h-8 rounded-full object-cover" />
+				<span class="text-xs text-gray-600">— {{r.user.userName || 'Anonymous'}}</span>
+			</div>
+		</div>
+	</div>
+</div>

@@ -6,10 +6,11 @@ import { Product } from '../../types/product';
 import { AsyncPipe, CommonModule, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable, catchError, of } from 'rxjs';
+import { ReviewsComponent } from '../reviews/reviews';
 
 @Component({
   selector: 'app-productdetail',
-  imports: [AsyncPipe, CommonModule, FormsModule, NgClass],
+  imports: [AsyncPipe, CommonModule, FormsModule, NgClass, ReviewsComponent],
   templateUrl: './productdetail.html',
   styleUrl: './productdetail.css'
 })
@@ -18,7 +19,7 @@ export class Productdetail implements OnInit {
   private router = inject(Router);
   private productService = inject(ProductService);
   private cartService = inject(CartService);
-  
+
   product$!: Observable<Product | null>;
   productId!: string;
   loading = true;
@@ -27,6 +28,7 @@ export class Productdetail implements OnInit {
   currentProduct: Product | null = null;
   currentImageIndex: number = 0;
   selectedQuantity: number = 1;
+  activeTab: 'details' | 'reviews' = 'details';
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -42,7 +44,7 @@ export class Productdetail implements OnInit {
             return of(null);
           })
         );
-        
+
         // Subscribe to get the current product for cart operations
         this.product$.subscribe(product => {
           this.currentProduct = product;
@@ -56,7 +58,7 @@ export class Productdetail implements OnInit {
     this.router.navigate(['/Products-list']);
   }
 
-  
+
 
   hasDiscount(discount: number): boolean {
     return discount > 0;
@@ -81,7 +83,7 @@ export class Productdetail implements OnInit {
         alert(`Sorry, only ${this.currentProduct.quantity} items available in stock.`);
         return;
       }
-      
+
       try {
         this.cartService.addToCart(this.currentProduct, this.selectedQuantity);
         alert(`${this.selectedQuantity} ${this.currentProduct.productName}(s) added to cart!`);
@@ -109,9 +111,9 @@ export class Productdetail implements OnInit {
     return originalPrice * (discount / 100);
   }
 
- 
 
-  
+
+
 
   isNewArrival(createdAt: string): boolean {
     const productDate = new Date(createdAt);

@@ -186,11 +186,11 @@
       <!-- Products Grid/List -->
       <div [class]="viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8' : 'flex flex-col gap-4 sm:gap-6'">
         @for (product of filteredProducts$ | async; track product.id; let i = $index) {
-          <div [class]="'group bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl ' + (viewMode === 'grid' ? 'card-hover animate-scaleIn' : 'flex flex-col sm:flex-row h-auto sm:h-52')" 
+          <div [class]="'group bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl ' + (viewMode === 'grid' ? 'card-hover animate-scaleIn' : 'flex flex-col sm:flex-row min-h-0')" 
                [style.animation-delay]="viewMode === 'grid' ? (i * 100) + 'ms' : '0ms'">
             
             <!-- Product Image -->
-            <div [class]="'relative overflow-hidden cursor-pointer ' + (viewMode === 'grid' ? 'h-56' : 'h-48 sm:w-48 sm:h-full flex-shrink-0')" [routerLink]="['/productdetail', product.id]">
+            <div [class]="'relative overflow-hidden cursor-pointer ' + (viewMode === 'grid' ? 'h-56' : 'h-48 sm:w-48 sm:min-h-full flex-shrink-0')" [routerLink]="['/productdetail', product.id]">
               <img 
                 [src]="product.productImageUrl || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'" 
                 [alt]="product.productName"
@@ -300,7 +300,7 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
                         </svg>
                         @if (cartService.getItemQuantity(product.id) > 0) {
-                          <span class="hidden sm:inline">Add More ({{cartService.getAvailableToAdd(product)}} left)</span>
+                          <span class="hidden sm:inline">Add More</span>
                           <span class="sm:hidden">Add More</span>
                         } @else {
                           <span class="hidden sm:inline">Add to Cart</span>

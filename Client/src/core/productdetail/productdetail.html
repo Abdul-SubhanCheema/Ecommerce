@@ -340,6 +340,101 @@
           </div>
         </div>
       </div>
+      
+      <!-- Product Details and Reviews Tabs -->
+      <div class="mt-16">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <!-- Tab Navigation -->
+          <div class="border-b border-gray-200">
+            <nav class="flex">
+              <button 
+                (click)="activeTab = 'details'"
+                [class]="'flex-1 py-4 px-6 text-center font-medium transition-colors ' + (activeTab === 'details' ? 'border-b-2 border-orange-500 text-orange-600 bg-orange-50' : 'text-gray-600 hover:text-orange-600 hover:bg-gray-50')">
+                Product Details
+              </button>
+              <button 
+                (click)="activeTab = 'reviews'"
+                [class]="'flex-1 py-4 px-6 text-center font-medium transition-colors ' + (activeTab === 'reviews' ? 'border-b-2 border-orange-500 text-orange-600 bg-orange-50' : 'text-gray-600 hover:text-orange-600 hover:bg-gray-50')">
+                Reviews ({{product.totalReviews}})
+              </button>
+            </nav>
+          </div>
+          
+          <!-- Tab Content -->
+          <div class="p-8">
+            <!-- Product Details Tab -->
+            <div *ngIf="activeTab === 'details'" class="space-y-6">
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-4">Product Information</h3>
+                <div class="prose prose-gray max-w-none">
+                  <p class="text-gray-600 leading-relaxed">{{product.description}}</p>
+                </div>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h4 class="font-semibold text-gray-900 mb-3">Specifications</h4>
+                  <div class="space-y-2 text-sm">
+                    <div class="flex justify-between py-2 border-b border-gray-100">
+                      <span class="text-gray-600">Brand</span>
+                      <span class="font-medium">{{product.brand || 'Generic'}}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-100">
+                      <span class="text-gray-600">Category</span>
+                      <span class="font-medium">{{product.category?.name || 'Uncategorized'}}</span>
+                    </div>
+                    <div class="flex justify-between py-2 border-b border-gray-100">
+                      <span class="text-gray-600">Availability</span>
+                      <span class="font-medium" [ngClass]="getStockStatusColor(product.quantity)">
+                        {{getStockStatus(product.quantity)}}
+                      </span>
+                    </div>
+                    <div class="flex justify-between py-2">
+                      <span class="text-gray-600">SKU</span>
+                      <span class="font-medium">{{product.id}}</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h4 class="font-semibold text-gray-900 mb-3">Features</h4>
+                  <ul class="space-y-2 text-sm text-gray-600">
+                    <li class="flex items-center gap-2">
+                      <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                      </svg>
+                      High Quality Materials
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                      </svg>
+                      Fast Shipping
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                      </svg>
+                      30-Day Return Policy
+                    </li>
+                    <li class="flex items-center gap-2">
+                      <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                      </svg>
+                      Warranty Included
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Reviews Tab -->
+            <div *ngIf="activeTab === 'reviews'">
+              <app-reviews [productId]="product.id"></app-reviews>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     
   } @else if (error) {

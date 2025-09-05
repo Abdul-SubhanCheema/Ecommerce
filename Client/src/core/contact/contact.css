@@ -1,0 +1,161 @@
+/* Contact Page Specific Styles */
+
+/* Enhanced form focus states */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  border-color: var(--orange-400);
+}
+
+/* Custom validation styles for better UX */
+.ng-invalid.ng-touched:not(form) {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.ng-valid.ng-touched:not(form) {
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+/* Contact form specific enhancements */
+.contact-form-container {
+  animation: slideInFromLeft 0.6s ease-out;
+}
+
+.contact-info-container {
+  animation: slideInFromRight 0.6s ease-out;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Loading state enhancement */
+.loading-state {
+  position: relative;
+  overflow: hidden;
+}
+
+.loading-state::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Enhanced button hover effects */
+.contact-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);
+}
+
+/* Text overflow fixes for mobile */
+.break-text {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Email field specific fixes */
+input[type="email"] {
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
+
+/* Ensure minimum width containers */
+.min-w-0 {
+  min-width: 0;
+}
+
+/* Responsive text sizing */
+@media (max-width: 640px) {
+  /* Smaller text on very small screens */
+  .responsive-text {
+    font-size: 0.875rem; /* 14px */
+  }
+  
+  /* Reduce padding on mobile */
+  .mobile-padding {
+    padding: 0.75rem; /* 12px */
+  }
+  
+  /* Stack layout improvements */
+  .contact-form-container,
+  .contact-info-container {
+    animation: fadeInUp 0.5s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Prevent horizontal overflow */
+  .overflow-hidden-x {
+    overflow-x: hidden;
+  }
+}
+
+/* Focus visible improvements for accessibility */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--orange-500);
+  outline-offset: 2px;
+}
+
+/* Card height optimization */
+.auto-height {
+  height: auto;
+  min-height: fit-content;
+}
+
+/* Flex container improvements */
+.flex-container-mobile {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+@media (min-width: 1024px) {
+  .flex-container-mobile {
+    flex-direction: row;
+  }
+}

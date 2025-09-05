@@ -7,11 +7,13 @@ import { Notfound } from '../core/notfound/notfound';
 import { Products } from '../core/products/products';
 import { Productdetail } from '../core/productdetail/productdetail';
 import { Cartdetails } from '../core/cartdetails/cartdetails';
+import { Contact } from '../core/contact/contact';
 
 export const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
     {path:'login',component:Login},
     {path:"about",component: About },
+    {path:"contact",component: Contact },
     {path:"Products-list",component:Products},
     {path:"productdetail/:id",component:Productdetail},
     {path:"cart",component:Cartdetails},

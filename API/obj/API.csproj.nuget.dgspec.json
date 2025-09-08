@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\API.csproj": {}
+    "C:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\API.csproj": {}
   },
   "projects": {
-    "c:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\API.csproj": {
+    "C:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\API.csproj",
+        "projectUniqueName": "C:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\API.csproj",
         "projectName": "API",
-        "projectPath": "c:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\API.csproj",
+        "projectPath": "C:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\API.csproj",
         "packagesPath": "C:\\Users\\AbdulSubhan2\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\obj\\",
+        "outputPath": "C:\\Users\\AbdulSubhan2\\Desktop\\Demo\\EcommerceStore\\API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

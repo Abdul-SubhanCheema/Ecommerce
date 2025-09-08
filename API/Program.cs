@@ -1,5 +1,6 @@
 using System.Text;
 using API.Data;
+using API.Helpers;
 using API.Interfaces;
 using API.MiddleWare;
 using API.Services;
@@ -23,6 +24,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.AddCors();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudSettings"));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
 {

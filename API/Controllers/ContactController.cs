@@ -4,16 +4,16 @@ using API.DTOs;
 
 public class ContactController:BaseApiController
 {
-    public Task SubmitContactForm(ContactDto contactDto)
-    {
-        var email = "abdulsubhancheema97@gmail.com";
-        var pw = "xvjeidfxoneerrij";   
+    // public Task SubmitContactForm(ContactDto contactDto)
+    // {
+    //     var email = "abdulsubhancheema97@gmail.com";
+    //     var pw = "xvjeidfxoneerrij";   
 
-        var client = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587)
-        {
-            Credentials = new System.Net.NetworkCredential(email, pw),
-            EnableSsl = true
-        };
+    //     var client = new System.Net.Mail.SmtpClient("smtp.gmail.com", 587)
+    //     {
+    //         Credentials = new System.Net.NetworkCredential(email, pw),
+    //         EnableSsl = true
+    //     };
         
-    }
+    // }
 }

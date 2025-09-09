@@ -16,6 +16,9 @@ export class ProductService {
   GetProducts(){
    return this.http.get<Product[]>(this.baseUrl + "/product");
   }
+  GetDealsProducts(){
+    return this.http.get<Product[]>(this.baseUrl + "/product/deals");
+   }
 
   GetProductById(id: string){
     return this.http.get<Product>(this.baseUrl + "/product/" + id);

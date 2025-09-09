@@ -8,6 +8,7 @@ import { Products } from '../core/products/products';
 import { Productdetail } from '../core/productdetail/productdetail';
 import { Cartdetails } from '../core/cartdetails/cartdetails';
 import { Contact } from '../core/contact/contact';
+import { Deals } from '../core/deals/deals';
 
 export const routes: Routes = [
     {path: '', redirectTo: 'login', pathMatch: 'full'},
@@ -17,6 +18,7 @@ export const routes: Routes = [
     {path:"Products-list",component:Products},
     {path:"productdetail/:id",component:Productdetail},
     {path:"cart",component:Cartdetails},
+    {path:"deals",component:Deals},
     {path:"adminhome",component:Adminhome, canActivate:[authGuard]},
     {path:'**',component:Notfound},
 ];

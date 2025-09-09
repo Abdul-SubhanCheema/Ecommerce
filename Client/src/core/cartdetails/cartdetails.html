@@ -178,7 +178,11 @@
               </div>
               <div class="flex justify-between text-gray-600">
                 <span>Shipping</span>
-                <span class="text-green-600">Free</span>
+                @if (cartService.totalPrice() > 50) {
+                  <span class="text-green-600">Free</span>
+                } @else {
+                  <span>${{(5.99).toFixed(2)}}</span>
+                }
               </div>
               <div class="flex justify-between text-gray-600">
                 <span>Tax</span>

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
 
-    public class ProductController(IProductRepo productRepo) : BaseApiController
+    public class ProductController(IProductRepo productRepo,IPhoto photoService) : BaseApiController
     {
         private readonly IProductRepo _productRepo = productRepo;
 
@@ -17,6 +17,14 @@ namespace API.Controllers
             var productDtos = products.Select(MapToProductDto).ToList();
             return Ok(productDtos);
         }
+        [HttpGet("deals")]
+        public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetDealsProducts()
+        {
+            var products = await _productRepo.GetDealsProductsAsync();
+            var productDtos = products.Select(MapToProductDto).ToList();
+            return Ok(productDtos);
+        }
+
 
         [HttpGet("category/{categoryId}")]
         public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetProductsByCategory(int categoryId)

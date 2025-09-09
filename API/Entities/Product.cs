@@ -22,7 +22,4 @@ public class Product
     public ICollection<Photo> Photos { get; set; } = new List<Photo>();
     public ICollection<Review> Reviews { get; set; } = new List<Review>();
 
-    // Calculated properties (not stored in database) - Disabled to prevent circular references
-    // public double AverageRating => Reviews.Any() ? Math.Round(Reviews.Average(r => r.Rating), 1) : 0.0;
-    // public int TotalReviews => Reviews.Count;
 }

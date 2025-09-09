@@ -23,6 +23,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 builder.Services.AddCors();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPhoto, PhotoService>();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudSettings"));
 

@@ -1,0 +1,318 @@
+/* Dynamic list view improvements */
+
+/* Ensure consistent minimum height for list cards while allowing growth */
+.group.min-h-0 {
+  min-height: 12rem; /* Base minimum for mobile */
+}
+
+@media (min-width: 640px) {
+  .group.min-h-0 {
+    min-height: 14rem; /* Larger minimum for desktop list view */
+  }
+}
+
+/* Enhanced image container for list view dynamic height */
+.group .sm\:min-h-full {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .group .sm\:min-h-full {
+    min-height: 100%;
+    height: auto;
+  }
+}
+
+/* Improved text wrapping and spacing */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+  word-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Better responsive behavior for product info */
+@media (min-width: 640px) {
+  .group.min-h-0 > div:last-child {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+  }
+}
+
+/* Modern Carousel Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Animation Classes */
+.animate-fadeIn {
+  animation: fadeIn 0.8s ease-out;
+}
+
+.animate-slideIn {
+  animation: slideIn 0.8s ease-out 0.2s both;
+}
+
+.animate-slideUp {
+  animation: slideUp 0.8s ease-out 0.4s both;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Modern Carousel Styles */
+.carousel-container {
+  position: relative;
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+}
+
+.carousel-track {
+  height: 100%;
+  transition: transform 0.7s cubic-bezier(0.4, 0.0, 0.2, 1);
+}
+
+.carousel-slide {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Background Overlay Gradients */
+.carousel-slide .bg-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+/* Content Animations */
+.carousel-slide .animate-fadeIn {
+  animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.carousel-slide .animate-slideIn {
+  animation: slideIn 1s ease-out 0.5s both;
+}
+
+.carousel-slide .animate-slideUp {
+  animation: slideUp 1s ease-out 0.7s both;
+}
+
+/* Button Hover Effects */
+.carousel-slide button {
+  position: relative;
+  overflow: hidden;
+}
+
+.carousel-slide button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.carousel-slide button:hover::before {
+  left: 100%;
+}
+
+/* Navigation Buttons */
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  padding: 1rem;
+  color: white;
+  transition: all 0.3s ease;
+  z-index: 20;
+}
+
+.carousel-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Indicators */
+.carousel-indicators {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.75rem;
+  z-index: 20;
+}
+
+.carousel-indicator {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.carousel-indicator.active {
+  width: 2rem;
+  border-radius: 1rem;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.carousel-indicator:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: scale(1.2);
+}
+
+/* Progress Bar */
+.carousel-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.carousel-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #f97316, #ef4444);
+  transition: width 0.7s ease-out;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+}
+
+/* Glass Morphism Effects */
+.glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1rem;
+}
+
+/* Text Gradient */
+.text-gradient {
+  background: linear-gradient(135deg, #f97316, #ef4444, #f59e0b);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+/* Responsive Carousel */
+@media (max-width: 768px) {
+  .carousel-slide h2 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+  }
+  
+  .carousel-slide .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+  
+  .carousel-nav {
+    padding: 0.75rem;
+  }
+  
+  .carousel-indicators {
+    bottom: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .carousel-slide h2 {
+    font-size: 2rem;
+  }
+  
+  .carousel-slide .grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+

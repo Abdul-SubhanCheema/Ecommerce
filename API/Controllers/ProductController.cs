@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers
 {
 
-    public class ProductController(IProductRepo productRepo,IPhoto photoService) : BaseApiController
+    public class ProductController(IProductRepo productRepo, IPhoto photoService) : BaseApiController
     {
         private readonly IProductRepo _productRepo = productRepo;
 
@@ -54,16 +54,69 @@ namespace API.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateProduct(string id, Product product)
+        public async Task<ActionResult<ProductDto>> UpdateProduct(string id, ProductUpdateDto updateDto)
         {
-            if (id != product.Id) return BadRequest("Product ID mismatch.");
+            var existingProduct = await _productRepo.GetProductByIdSAsync(id);
+            if (existingProduct == null) return NotFound("Product not found.");
 
-            _productRepo.Update(product);
+            // Update only the provided fields
+            existingProduct.ProductName = updateDto.ProductName;
+            existingProduct.Description = updateDto.Description;
+            existingProduct.Price = updateDto.Price;
+            existingProduct.Discount = updateDto.Discount;
+            existingProduct.Quantity = updateDto.Quantity;
+            existingProduct.Brand = updateDto.Brand;
+            existingProduct.CategoryId = updateDto.CategoryId;
+            //existingProduct.ProductImageUrl = updateDto.ProductImageUrl;
+            existingProduct.UpdatedAt = DateTime.UtcNow;
+
+            _productRepo.Update(existingProduct);
 
             if (await _productRepo.SaveAllAsync())
-                return NoContent();
+            {
+                // Reload the product with updated category information
+                var updatedProduct = await _productRepo.GetProductByIdSAsync(id);
+                return Ok(MapToProductDto(updatedProduct!));
+            }
 
             return BadRequest("Failed to update product.");
+        }
+
+        [HttpPost("add-photo")]
+        [RequestSizeLimit(100 * 1024 * 1024)] // 100MB limit
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<Photo>> AddPhoto([FromForm] IFormFile file, [FromForm] string id)
+        {
+            // Console.WriteLine($"AddPhoto called with id: {id}");
+            // Console.WriteLine($"File: {file?.FileName}, Size: {file?.Length}, ContentType: {file?.ContentType}");
+            
+            if (file == null || string.IsNullOrEmpty(id))
+            {
+                return BadRequest("File and ID are required.");
+            }
+            
+            var product = await _productRepo.GetProductForUpdate(id);
+            if (product == null) return BadRequest("Product can't be Updated.");
+
+            var result = await photoService.UploadPhotoAsync(file);
+            if (result.Error != null) return BadRequest(result.Error.Message);
+            var photo = new Photo
+            {
+                Url = result.SecureUrl.AbsoluteUri,
+                PublicId = result.PublicId,
+                ProductId = product.Id
+            };
+            if (product.ProductImageUrl == null)
+            {
+                product.ProductImageUrl = photo.Url;
+            }
+            product.Photos.Add(photo);
+            if (await _productRepo.SaveAllAsync()) return photo;
+
+            return BadRequest("Failed to add photo to product.");
+
+
+
         }
 
 
@@ -72,7 +125,7 @@ namespace API.Controllers
         public async Task<ActionResult<Product>> CreateProduct(Product product)
         {
             // Add product to context
-           await _productRepo.Add(product);
+            await _productRepo.Add(product);
 
             if (await _productRepo.SaveAllAsync())
             {

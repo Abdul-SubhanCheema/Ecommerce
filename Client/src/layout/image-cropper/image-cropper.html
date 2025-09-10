@@ -1,0 +1,140 @@
+<!-- Image Cropper Modal -->
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" *ngIf="isOpen">
+  <div class="bg-white rounded-lg w-full max-w-4xl max-h-[95vh] overflow-hidden flex flex-col">
+    <!-- Header -->
+    <div class="px-4 sm:px-6 py-4 border-b border-gray-200">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Crop Your Image</h3>
+        <button 
+          (click)="cancel()"
+          class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+          <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Crop Container -->
+    <div class="flex-1 overflow-auto p-4 sm:p-6">
+      <div class="flex justify-center mb-4 sm:mb-6">
+        <div class="relative bg-gray-100 rounded-lg overflow-hidden" 
+             [style.width.px]="canvasDisplayWidth" 
+             [style.height.px]="canvasDisplayHeight">
+          <!-- Loading indicator -->
+          <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center bg-gray-100 z-10">
+            <div class="flex flex-col items-center space-y-2">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600"></div>
+              <span class="text-sm text-gray-600">Loading image...</span>
+            </div>
+          </div>
+          
+          <!-- Image Canvas (behind overlay) -->
+          <canvas #imageCanvas 
+                  class="absolute top-0 left-0 w-full h-full"
+                  [class.opacity-0]="isLoading">
+          </canvas>
+          
+          <!-- Overlay Canvas (on top for crop frame and grid) -->
+          <canvas #overlayCanvas 
+                  class="absolute top-0 left-0 w-full h-full cursor-move touch-manipulation"
+                  [class.opacity-0]="isLoading"
+                  (mousedown)="startDrag($event)"
+                  (mousemove)="onDrag($event)"
+                  (mouseup)="endDrag()"
+                  (mouseleave)="endDrag()"
+                  (touchstart)="startTouch($event)"
+                  (touchmove)="onTouch($event)"
+                  (touchend)="endDrag()">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="space-y-4 sm:space-y-6">
+        <!-- Zoom Control -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Zoom</label>
+          <div class="flex items-center space-x-3 sm:space-x-4">
+            <button 
+              (click)="adjustZoom(-0.1)"
+              class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+              </svg>
+            </button>
+            <input type="range" 
+                   [(ngModel)]="scale" 
+                   (input)="updatePreview()"
+                   min="0.1" 
+                   max="3" 
+                   step="0.1" 
+                   class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+            <button 
+              (click)="adjustZoom(0.1)"
+              class="p-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+              </svg>
+            </button>
+            <span class="text-sm font-medium text-gray-600 w-12 text-center">{{(scale * 100).toFixed(0)}}%</span>
+          </div>
+        </div>
+        
+        <!-- Crop Size Control -->
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Crop Ratio</label>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <button 
+              *ngFor="let size of cropSizes"
+              (click)="setCropSize(size.value)"
+              [class]="getCropSizeButtonClass(size.value)"
+              class="px-3 py-2 text-sm font-medium rounded-lg border transition-colors">
+              {{size.label}}
+            </button>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <button 
+            (click)="resetPosition()"
+            class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+            Reset Position
+          </button>
+          <button 
+            (click)="centerImage()"
+            class="px-3 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors">
+            Center Image
+          </button>
+          <button 
+            (click)="fitToFrame()"
+            class="px-3 py-2 text-sm font-medium text-blue-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors col-span-2 sm:col-span-1">
+            Fit to Frame
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="px-4 sm:px-6 py-4 bg-gray-50 border-t border-gray-200">
+      <div class="flex flex-col sm:flex-row gap-3 sm:justify-end">
+        <button 
+          (click)="cancel()" 
+          class="w-full sm:w-auto px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors order-2 sm:order-1">
+          Cancel
+        </button>
+        <button 
+          (click)="crop()" 
+          [disabled]="isProcessing"
+          class="w-full sm:w-auto px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors order-1 sm:order-2 flex items-center justify-center">
+          <svg *ngIf="isProcessing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          {{ isProcessing ? 'Processing...' : 'Crop & Use' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -8,7 +8,7 @@
       <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
         Shop from our curated collection of premium products at unbeatable prices
       </p>
-      
+
       <!-- Search and Filter Bar -->
       <div class="max-w-6xl mx-auto mb-8">
         <div class="bg-white rounded-2xl shadow-xl p-6 lg:p-8">
@@ -16,32 +16,28 @@
             <!-- Left Section: Search -->
             <div class="flex-1 lg:max-w-md">
               <div class="relative">
-                <input 
-                  type="text" 
-                  placeholder="Search products..." 
-                  [(ngModel)]="searchTerm"
+                <input type="text" placeholder="Search products..." [(ngModel)]="searchTerm"
                   (input)="onSearchChange($any($event.target).value)"
-                  class="w-full pl-12 pr-4 py-4 border-2 border-orange-200 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition-all duration-300 text-gray-700 placeholder-gray-400 shadow-sm hover:shadow-md"
-                />
-                <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                  class="w-full pl-12 pr-4 py-4 border-2 border-orange-200 rounded-xl focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition-all duration-300 text-gray-700 placeholder-gray-400 shadow-sm hover:shadow-md" />
+                <svg class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-orange-400" fill="none"
+                  stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
               </div>
             </div>
-            
+
             <!-- Right Section: Filters and Controls -->
             <div class="flex flex-col sm:flex-row gap-4 lg:gap-6">
               <!-- Category Filter -->
               <div class="relative min-w-0 sm:min-w-[200px]">
-                <select 
-                  [(ngModel)]="selectedCategory" 
-                  (change)="onCategoryChange($any($event.target).value)"
+                <select [(ngModel)]="selectedCategory" (change)="onCategoryChange($any($event.target).value)"
                   class="w-full appearance-none bg-white border-2 border-orange-200 rounded-xl px-4 py-4 pr-12 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition-all duration-300 text-gray-700 shadow-sm hover:shadow-md cursor-pointer">
                   <option value="" class="text-gray-700">🏷️ All Categories</option>
                   @if (categories$ | async; as categories) {
-                    @for (category of categories; track category.id) {
-                      <option [value]="category.name" class="text-gray-700">{{ category.name }}</option>
-                    }
+                  @for (category of categories; track category.id) {
+                  <option [value]="category.name" class="text-gray-700">{{ category.name }}</option>
+                  }
                   }
                 </select>
                 <div class="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
@@ -50,12 +46,10 @@
                   </svg>
                 </div>
               </div>
-              
+
               <!-- Sort Filter -->
               <div class="relative min-w-0 sm:min-w-[200px]">
-                <select 
-                  [(ngModel)]="sortBy" 
-                  (change)="onSortChange($any($event.target).value)"
+                <select [(ngModel)]="sortBy" (change)="onSortChange($any($event.target).value)"
                   class="w-full appearance-none bg-white border-2 border-orange-200 rounded-xl px-4 py-4 pr-12 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 focus:outline-none transition-all duration-300 text-gray-700 shadow-sm hover:shadow-md cursor-pointer">
                   <option value="" class="text-gray-700">🔄 Sort By</option>
                   <option value="price-asc" class="text-gray-700">💰 Price: Low to High</option>
@@ -71,22 +65,21 @@
                   </svg>
                 </div>
               </div>
-              
+
             </div>
           </div>
-          
+
           <!-- Clear Filters Button -->
           @if (searchTerm || selectedCategory || sortBy) {
-            <div class="mt-6 pt-6 border-t border-orange-100">
-              <button 
-                (click)="clearFilters()"
-                class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-400">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-                <span class="font-medium">Clear All Filters</span>
-              </button>
-            </div>
+          <div class="mt-6 pt-6 border-t border-orange-100">
+            <button (click)="clearFilters()"
+              class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-red-400">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+              <span class="font-medium">Clear All Filters</span>
+            </button>
+          </div>
           }
         </div>
       </div>
@@ -98,241 +91,277 @@
 <section class="py-16 bg-white">
   <div class="container-custom">
     @if (filteredProducts$ | async; as products) {
-      <!-- Products Count and Active Filters -->
-      <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 animate-slideIn gap-4">
-        <h2 class="text-2xl font-bold text-gray-800">
-          @if (searchTerm || selectedCategory) {
-            Search Results <span class="text-orange-600">({{products.length}} found)</span>
-          } @else {
-            Featured Products <span class="text-orange-600">({{products.length}})</span>
+    <!-- Products Count and Active Filters -->
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 animate-slideIn gap-4">
+      <h2 class="text-2xl font-bold text-gray-800">
+        @if (searchTerm || selectedCategory) {
+        Search Results <span class="text-orange-600">({{products.length}} found)</span>
+        } @else {
+        Featured Products <span class="text-orange-600">({{products.length}})</span>
+        }
+      </h2>
+
+      <!-- Active Filters Display -->
+      @if (searchTerm || selectedCategory || sortBy) {
+      <div class="flex flex-wrap gap-2">
+        @if (searchTerm) {
+        <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm flex items-center gap-1">
+          Search: "{{searchTerm}}"
+          <button (click)="onSearchChange('')" class="text-orange-600 hover:text-orange-800">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </span>
+        }
+        @if (selectedCategory) {
+        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm flex items-center gap-1">
+          Category: {{selectedCategory}}
+          <button (click)="onCategoryChange('')" class="text-blue-600 hover:text-blue-800">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </span>
+        }
+        @if (sortBy) {
+        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm flex items-center gap-1">
+          Sorted by:
+          @switch (sortBy) {
+          @case ('price-asc') { Price: Low to High }
+          @case ('price-desc') { Price: High to Low }
+          @case ('name-asc') { Name A-Z }
+          @case ('name-desc') { Name Z-A }
+          @case ('newest') { Newest First }
+          @case ('rating') { Highest Rated }
           }
-        </h2>
-        
-        <!-- Active Filters Display -->
-        @if (searchTerm || selectedCategory || sortBy) {
-          <div class="flex flex-wrap gap-2">
-            @if (searchTerm) {
-              <span class="px-3 py-1 bg-orange-100 text-orange-800 rounded-full text-sm flex items-center gap-1">
-                Search: "{{searchTerm}}"
-                <button (click)="onSearchChange('')" class="text-orange-600 hover:text-orange-800">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </button>
-              </span>
-            }
-            @if (selectedCategory) {
-              <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm flex items-center gap-1">
-                Category: {{selectedCategory}}
-                <button (click)="onCategoryChange('')" class="text-blue-600 hover:text-blue-800">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </button>
-              </span>
-            }
-            @if (sortBy) {
-              <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm flex items-center gap-1">
-                Sorted by: 
-                @switch (sortBy) {
-                  @case ('price-asc') { Price: Low to High }
-                  @case ('price-desc') { Price: High to Low }
-                  @case ('name-asc') { Name A-Z }
-                  @case ('name-desc') { Name Z-A }
-                  @case ('newest') { Newest First }
-                  @case ('rating') { Highest Rated }
-                }
-                <button (click)="onSortChange('')" class="text-green-600 hover:text-green-800">
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                  </svg>
-                </button>
-              </span>
-            }
-          </div>
+          <button (click)="onSortChange('')" class="text-green-600 hover:text-green-800">
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </span>
         }
       </div>
-      
-      <!-- View Controls -->
-      <div class="flex items-center justify-between mb-6">
-        <div class="flex items-center gap-3">
-          <span class="text-sm font-medium text-gray-600">View:</span>
-          <div class="flex gap-1 p-1 bg-gray-100 rounded-lg">
-            <!-- Grid View Button -->
-            <button 
-              (click)="setViewMode('grid')"
-              [class]="'p-2 rounded-md transition-all duration-200 ' + (viewMode === 'grid' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-600 hover:text-orange-600')"
-              title="Grid View">
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
+      }
+    </div>
+
+    <!-- View Controls -->
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center gap-3">
+        <span class="text-sm font-medium text-gray-600">View:</span>
+        <div class="flex gap-1 p-1 bg-gray-100 rounded-lg">
+          <!-- Grid View Button -->
+          <button (click)="setViewMode('grid')"
+            [class]="'p-2 rounded-md transition-all duration-200 ' + (viewMode === 'grid' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-600 hover:text-orange-600')"
+            title="Grid View">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+              </path>
+            </svg>
+          </button>
+
+          <!-- List View Button -->
+          <button (click)="setViewMode('list')"
+            [class]="'p-2 rounded-md transition-all duration-200 ' + (viewMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-600 hover:text-orange-600')"
+            title="List View">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16">
+              </path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Products Grid/List -->
+    <div
+      [class]="viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8' : 'flex flex-col gap-4 sm:gap-6'">
+      @for (product of filteredProducts$ | async; track product.id; let i = $index) {
+      <div
+        [class]="'group bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl ' + (viewMode === 'grid' ? 'card-hover animate-scaleIn' : 'flex flex-col sm:flex-row min-h-0')"
+        [style.animation-delay]="viewMode === 'grid' ? (i * 100) + 'ms' : '0ms'">
+
+        <!-- Product Image -->
+        <div
+          [class]="'relative overflow-hidden cursor-pointer ' + (viewMode === 'grid' ? 'h-56' : 'h-48 sm:w-48 sm:min-h-full flex-shrink-0')"
+          [routerLink]="['/productdetail', product.id]">
+          <img
+            [src]="product.productImageUrl || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'"
+            [alt]="product.productName"
+            [class]="'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ' + (viewMode === 'list' ? 'rounded-t-2xl sm:rounded-l-2xl sm:rounded-tr-none' : '')" />
+          <!-- Badges -->
+          <div class="absolute top-4 left-4 flex flex-col gap-2">
+            @if (hasDiscount(product.discount)) {
+            <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+              {{product.discount}}% OFF
+            </span>
+            }
+            @if (product.quantity <= 5 && product.quantity> 0) {
+              <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                Low Stock
+              </span>
+              }
+              @if (product.quantity === 0) {
+              <span class="bg-gray-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+                Out of Stock
+              </span>
+              }
+          </div>
+          <div class="absolute top-4 right-4">
+            <button
+              class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
+              (click)="$event.stopPropagation()">
+              <svg class="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                </path>
               </svg>
             </button>
-            
-            <!-- List View Button -->
-            <button 
-              (click)="setViewMode('list')"
-              [class]="'p-2 rounded-md transition-all duration-200 ' + (viewMode === 'list' ? 'bg-white shadow-sm text-orange-600' : 'text-gray-600 hover:text-orange-600')"
-              title="List View">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path>
-              </svg>
+          </div>
+
+          <!-- Quick View on Hover -->
+          <div
+            class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+            <button
+              class="btn-orange-outline bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white hover:text-orange-600">
+              View Details
             </button>
           </div>
         </div>
-      </div>
 
-      <!-- Products Grid/List -->
-      <div [class]="viewMode === 'grid' ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8' : 'flex flex-col gap-4 sm:gap-6'">
-        @for (product of filteredProducts$ | async; track product.id; let i = $index) {
-          <div [class]="'group bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 transition-all duration-300 hover:shadow-xl ' + (viewMode === 'grid' ? 'card-hover animate-scaleIn' : 'flex flex-col sm:flex-row min-h-0')" 
-               [style.animation-delay]="viewMode === 'grid' ? (i * 100) + 'ms' : '0ms'">
-            
-            <!-- Product Image -->
-            <div [class]="'relative overflow-hidden cursor-pointer ' + (viewMode === 'grid' ? 'h-56' : 'h-48 sm:w-48 sm:min-h-full flex-shrink-0')" [routerLink]="['/productdetail', product.id]">
-              <img 
-                [src]="product.productImageUrl || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'" 
-                [alt]="product.productName"
-                [class]="'w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ' + (viewMode === 'list' ? 'rounded-t-2xl sm:rounded-l-2xl sm:rounded-tr-none' : '')" 
-              />
-              <!-- Badges -->
-              <div class="absolute top-4 left-4 flex flex-col gap-2">
-                @if (hasDiscount(product.discount)) {
-                  <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                    {{product.discount}}% OFF
-                  </span>
-                }
-                @if (product.quantity <= 5 && product.quantity > 0) {
-                  <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                    Low Stock
-                  </span>
-                }
-                @if (product.quantity === 0) {
-                  <span class="bg-gray-500 text-white text-xs px-2 py-1 rounded-full font-medium">
-                    Out of Stock
-                  </span>
-                }
-              </div>
-              <div class="absolute top-4 right-4">
-                <button class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg" (click)="$event.stopPropagation()">
-                  <svg class="w-5 h-5 text-gray-600 hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                  </svg>
-                </button>
-              </div>
-              
-              <!-- Quick View on Hover -->
-              <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                <button class="btn-orange-outline bg-white/10 backdrop-blur-sm border-white text-white hover:bg-white hover:text-orange-600">
-                  View Details
-                </button>
-              </div>
+        <!-- Product Info -->
+        <div [class]="'p-4 sm:p-6 ' + (viewMode === 'list' ? 'flex-1 flex flex-col justify-between' : '')">
+          <!-- Category -->
+          <p class="text-sm text-orange-600 font-medium mb-2 uppercase tracking-wide">
+            {{product.category?.name || 'Uncategorized'}}
+          </p>
+
+          <!-- Product Name -->
+          <h3
+            [class]="'font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors cursor-pointer ' + (viewMode === 'grid' ? 'text-lg' : 'text-lg sm:text-xl')"
+            [routerLink]="['/productdetail', product.id]">
+            {{product.productName}}
+          </h3>
+
+          <!-- Description - Hide on mobile in list view to save space -->
+          <p
+            [class]="'text-gray-600 mb-4 line-clamp-2 ' + (viewMode === 'grid' ? 'text-sm' : 'text-sm sm:text-base') + (viewMode === 'list' ? ' hidden sm:block' : '')">
+            {{product.description}}
+          </p>
+
+          <!-- Rating -->
+          <div class="flex items-center mb-4">
+            <div class="flex text-yellow-400">
+              @for (star of [1,2,3,4,5]; track star) {
+              <svg class="w-4 h-4" [class.fill-current]="star <= product.averageRating"
+                [class.text-gray-300]="star > product.averageRating" viewBox="0 0 20 20">
+                <path
+                  d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+              </svg>
+              }
             </div>
-
-            <!-- Product Info -->
-            <div [class]="'p-4 sm:p-6 ' + (viewMode === 'list' ? 'flex-1 flex flex-col justify-between' : '')">
-              <!-- Category -->
-              <p class="text-sm text-orange-600 font-medium mb-2 uppercase tracking-wide">
-                {{product.category?.name || 'Uncategorized'}}
-              </p>
-              
-              <!-- Product Name -->
-              <h3 [class]="'font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors cursor-pointer ' + (viewMode === 'grid' ? 'text-lg' : 'text-lg sm:text-xl')" 
-                  [routerLink]="['/productdetail', product.id]">
-                {{product.productName}}
-              </h3>
-              
-              <!-- Description - Hide on mobile in list view to save space -->
-              <p [class]="'text-gray-600 mb-4 line-clamp-2 ' + (viewMode === 'grid' ? 'text-sm' : 'text-sm sm:text-base') + (viewMode === 'list' ? ' hidden sm:block' : '')">
-                {{product.description}}
-              </p>
-              
-              <!-- Rating -->
-              <div class="flex items-center mb-4">
-                <div class="flex text-yellow-400">
-                  @for (star of [1,2,3,4,5]; track star) {
-                    <svg class="w-4 h-4" [class.fill-current]="star <= product.averageRating" 
-                         [class.text-gray-300]="star > product.averageRating" viewBox="0 0 20 20">
-                      <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
-                    </svg>
-                  }
-                </div>
-                <span class="text-sm text-gray-500 ml-2">
-                  ({{product.averageRating.toFixed(1)}}) · {{product.totalReviews}} review{{product.totalReviews !== 1 ? 's' : ''}}
-                </span>
-              </div>
-
-              <!-- Price and Actions -->
-              <div [class]="'flex items-center justify-between ' + (viewMode === 'list' ? 'flex-col sm:flex-row gap-3 sm:gap-0' : '')">
-                <div class="flex flex-col">
-                  <span [class]="'font-bold text-orange-600 ' + (viewMode === 'list' ? 'text-xl sm:text-2xl' : 'text-2xl')">
-                    ${{getDiscountedPrice(product.price, product.discount).toFixed(2)}}
-                  </span>
-                  @if (hasDiscount(product.discount)) {
-                    <div class="flex items-center gap-2">
-                      <span class="text-sm text-gray-400 line-through">${{product.price.toFixed(2)}}</span>
-                      <span class="bg-red-100 text-red-800 text-xs px-1.5 py-0.5 rounded">-{{product.discount}}%</span>
-                    </div>
-                  }
-                  <span class="text-xs mt-1" [ngClass]="getStockStatusColor(product.quantity)">
-                    {{getStockStatus(product.quantity)}}
-                    @if (product.quantity > 0 && product.quantity <= 10) {
-                      ({{product.quantity}} left)
-                    }
-                  </span>
-                </div>
-                
-                <div [class]="'flex gap-2 ' + (viewMode === 'list' ? 'w-full sm:w-auto' : '')">
-                  @if (product.quantity > 0) {
-                    @if (cartService.isAtMaxQuantity(product)) {
-                      <button [class]="'bg-gray-400 text-white text-sm px-4 py-2 rounded-lg cursor-not-allowed flex items-center gap-2 ' + (viewMode === 'list' ? 'flex-1 sm:flex-none justify-center' : '')" disabled>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                        <span class="hidden sm:inline">In Cart ({{cartService.getItemQuantity(product.id)}})</span>
-                        <span class="sm:hidden">Added</span>
-                      </button>
-                    } @else {
-                      <button [class]="'btn-orange text-sm px-4 py-2 flex items-center gap-2 ' + (viewMode === 'list' ? 'flex-1 sm:flex-none justify-center' : '')" 
-                              (click)="addToCart(product, $event)">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-                        </svg>
-                        @if (cartService.getItemQuantity(product.id) > 0) {
-                          <span class="hidden sm:inline">Add More</span>
-                          <span class="sm:hidden">Add More</span>
-                        } @else {
-                          <span class="hidden sm:inline">Add to Cart</span>
-                          <span class="sm:hidden">Add</span>
-                        }
-                      </button>
-                    }
-                  } @else {
-                    <button [class]="'bg-gray-400 text-white text-sm px-4 py-2 rounded-lg cursor-not-allowed ' + (viewMode === 'list' ? 'flex-1 sm:flex-none justify-center flex items-center' : '')" disabled>
-                      <span class="hidden sm:inline">Out of Stock</span>
-                      <span class="sm:hidden">Sold Out</span>
-                    </button>
-                  }
-                </div>
-              </div>
-            </div>
+            <span class="text-sm text-gray-500 ml-2">
+              ({{product.averageRating.toFixed(1)}}) · {{product.totalReviews}} review{{product.totalReviews !== 1 ? 's'
+              : ''}}
+            </span>
           </div>
-        }
-      </div>
 
-      <!-- Load More Button -->
-      <div class="text-center mt-12">
-        <button class="btn-orange-outline px-8 py-3 text-lg">
-          Load More Products
-        </button>
+          <!-- Price and Actions -->
+          <div
+            [class]="'flex items-center justify-between ' + (viewMode === 'list' ? 'flex-col sm:flex-row gap-3 sm:gap-0' : '')">
+            <div class="flex flex-col">
+              <span [class]="'font-bold text-orange-600 ' + (viewMode === 'list' ? 'text-xl sm:text-2xl' : 'text-2xl')">
+                ${{getDiscountedPrice(product.price, product.discount).toFixed(2)}}
+              </span>
+              @if (hasDiscount(product.discount)) {
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-400 line-through">${{product.price.toFixed(2)}}</span>
+                <span class="bg-red-100 text-red-800 text-xs px-1.5 py-0.5 rounded">-{{product.discount}}%</span>
+              </div>
+              }
+              <span class="text-xs mt-1" [ngClass]="getStockStatusColor(product.quantity)">
+                {{getStockStatus(product.quantity)}}
+                @if (product.quantity > 0 && product.quantity <= 10) { ({{product.quantity}} left) } </span>
+            </div>
+
+            <div [class]="'flex gap-2 ' + (viewMode === 'list' ? 'w-full sm:w-auto' : '')">
+              @if (product.quantity > 0) {
+              @if (cartService.isAtMaxQuantity(product)) {
+              <button
+                [class]="'bg-gray-400 text-white text-sm px-4 py-2 rounded-lg cursor-not-allowed flex items-center gap-2 ' + (viewMode === 'list' ? 'flex-1 sm:flex-none justify-center' : '')"
+                disabled>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span class="hidden sm:inline">In Cart ({{cartService.getItemQuantity(product.id)}})</span>
+                <span class="sm:hidden">Added</span>
+              </button>
+              } @else {
+              <button
+                [class]="'btn-orange text-sm px-4 py-2 flex items-center gap-2 ' + (viewMode === 'list' ? 'flex-1 sm:flex-none justify-center' : '')"
+                (click)="addToCart(product, $event)">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17M17 13v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01">
+                  </path>
+                </svg>
+                @if (cartService.getItemQuantity(product.id) > 0) {
+                <span class="hidden sm:inline">Add More</span>
+                <span class="sm:hidden">Add More</span>
+                } @else {
+                <span class="hidden sm:inline">Add to Cart</span>
+                <span class="sm:hidden">Add</span>
+                }
+              </button>
+
+              }
+
+              } @else {
+              <button
+                [class]="'bg-gray-400 text-white text-sm px-4 py-2 rounded-lg cursor-not-allowed ' + (viewMode === 'list' ? 'flex-1 sm:flex-none justify-center flex items-center' : '')"
+                disabled>
+                <span class="hidden sm:inline">Out of Stock</span>
+                <span class="sm:hidden">Sold Out</span>
+              </button>
+              }
+            </div>
+            @if (accountService.CurrentUser()) {
+            <button [class]="
+                    'flex items-center gap-2 px-4 py-2 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-sm font-semibold shadow transition-all duration-200' +
+                    (viewMode === 'grid' ? ' absolute top-4 right-4 z-10' : ' ml-auto mt-2 sm:mt-0')
+                  " style="box-shadow: 0 2px 8px rgba(59,130,246,0.08);" title="Edit Product"
+              (click)="editProduct(product)">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H7v-3a2 2 0 01.586-1.414z" />
+              </svg>
+              <span class="hidden sm:inline">Edit</span>
+            </button>
+            }
+          </div>
+        </div>
       </div>
-      
+      }
+
+    </div>
+
+    <!-- Load More Button -->
+    <div class="text-center mt-12">
+      <button class="btn-orange-outline px-8 py-3 text-lg">
+        Load More Products
+      </button>
+    </div>
+
     } @else {
-      <!-- Loading State -->
-      <div class="flex flex-col items-center justify-center py-20">
-        <div class="loading-orange mb-4"></div>
-        <h3 class="text-xl font-semibold text-gray-700 mb-2">Loading Amazing Products</h3>
-        <p class="text-gray-500">Please wait while we fetch the latest products for you...</p>
-      </div>
+    <!-- Loading State -->
+    <div class="flex flex-col items-center justify-center py-20">
+      <div class="loading-orange mb-4"></div>
+      <h3 class="text-xl font-semibold text-gray-700 mb-2">Loading Amazing Products</h3>
+      <p class="text-gray-500">Please wait while we fetch the latest products for you...</p>
+    </div>
     }
   </div>
 </section>
@@ -344,15 +373,18 @@
       <h2 class="text-3xl font-bold text-white mb-4">Stay Updated</h2>
       <p class="text-orange-100 mb-8">Get the latest deals and product updates delivered to your inbox</p>
       <div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-        <input 
-          type="email" 
-          placeholder="Enter your email" 
-          class="flex-1 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
-        />
-        <button class="bg-white text-orange-600 font-semibold px-6 py-3 rounded-lg hover:bg-orange-50 transition-colors">
+        <input type="email" placeholder="Enter your email"
+          class="flex-1 px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300" />
+        <button
+          class="bg-white text-orange-600 font-semibold px-6 py-3 rounded-lg hover:bg-orange-50 transition-colors">
           Subscribe
         </button>
       </div>
     </div>
   </div>
 </section>
+
+<!-- Product Edit Modal -->
+<app-product-edit-modal [isOpen]="isEditModalOpen" [product]="selectedProductForEdit"
+  (modalClosed)="onEditModalClosed()" (productUpdated)="onProductUpdated($event)">
+</app-product-edit-modal>

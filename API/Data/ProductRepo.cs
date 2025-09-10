@@ -73,8 +73,4 @@ public class ProductRepo(AppDbContext context) : IProductRepo
         return await context.Product.Include(x=>x.Photos).SingleOrDefaultAsync(x=>x.Id==Id);
     }
 
-    Task<IReadOnlyList<Photo>> IProductRepo.GetProductForUpdate(string Id)
-    {
-        throw new NotImplementedException();
-    }
 }

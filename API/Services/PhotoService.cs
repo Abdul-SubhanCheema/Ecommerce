@@ -15,7 +15,7 @@ public class PhotoService : IPhoto
         var acc = new Account(config.Value.CloudName,config.Value.ApiKey,config.Value.ApiSecret);
         _cloudinary = new Cloudinary(acc);
     }
-    public async Task<ImageUploadResult> UploadPhotoAsync(IFormFile file)
+    public async Task<UploadResult> UploadPhotoAsync(IFormFile file)
     {
         var uploadResult = new ImageUploadResult();
         if (file.Length > 0)
@@ -36,10 +36,5 @@ public class PhotoService : IPhoto
     {
         var deleteparams = new DeletionParams(publicId);
         return _cloudinary.DestroyAsync(deleteparams);
-    }
-
-    Task<UploadResult> IPhoto.UploadPhotoAsync(IFormFile file)
-    {
-        throw new NotImplementedException();
     }
 }

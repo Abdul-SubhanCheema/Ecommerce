@@ -8,7 +8,6 @@ import { Product } from '../../types/product';
 })
 export class ProductService {
   private http=inject(HttpClient);
-  private router=inject(Router);
 
     baseUrl="http://localhost:5262/api";
 
@@ -22,6 +21,32 @@ export class ProductService {
 
   GetProductById(id: string){
     return this.http.get<Product>(this.baseUrl + "/product/" + id);
+  }
+
+  UpdateProduct(id: string, productData: Partial<Product>){
+    return this.http.put<Product>(this.baseUrl + "/product/" + id, productData);
+  }
+
+  UploadProductPhoto(file: File, productId: string){
+    console.log('UploadProductPhoto called with:', {
+      productId,
+      fileName: file.name,
+      fileSize: file.size,
+      fileType: file.type
+    });
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('id', productId);
+    
+    console.log('FormData contents:');
+    for (let pair of formData.entries()) {
+      console.log(pair[0] + ': ' + pair[1]);
+    }
+    
+    //console.log('Making request to:', this.baseUrl + "/product/add-photo");
+    
+    return this.http.post<any>(this.baseUrl + "/product/add-photo", formData);
   }
     
 }

@@ -12,7 +12,7 @@ public interface IProductRepo
     Task<IReadOnlyList<Product>> GetProductsByCategoryAsync(int categoryId);
 
     Task<IReadOnlyList<Photo>> GetPhotosForProductAsync(string Id);
-    Task<IReadOnlyList<Photo>> GetProductForUpdate(string Id);
+    Task<Product?> GetProductForUpdate(string Id);
     Task Add(Product product);
     Task<IReadOnlyList<Product>> GetDealsProductsAsync();
 }

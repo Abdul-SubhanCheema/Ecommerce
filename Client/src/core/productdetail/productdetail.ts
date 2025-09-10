@@ -17,6 +17,7 @@ import { ReviewsComponent } from '../reviews/reviews';
 export class Productdetail implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  
   private productService = inject(ProductService);
   private cartService = inject(CartService);
 

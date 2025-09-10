@@ -7,16 +7,19 @@ import { Product, Category } from '../../types/product';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { AccountService } from '../services/account-service';
+import { ProductEditModal } from '../product-edit-modal/product-edit-modal';
 
 @Component({
   selector: 'app-products',
-  imports: [AsyncPipe, RouterLink, NgClass, FormsModule],
+  imports: [AsyncPipe, RouterLink, NgClass, FormsModule, ProductEditModal],
   templateUrl: './products.html',
   styleUrl: './products.css'
 })
 export class Products {
   productService = inject(ProductService);
   categoryService = inject(CategoryService);
+  protected accountService = inject(AccountService);
   cartService = inject(CartService);
   
   protected product$: Observable<Product[]>;
@@ -29,17 +32,27 @@ export class Products {
   sortBy = '';
   viewMode: 'grid' | 'list' = 'grid';
   
+  // Edit modal state
+  isEditModalOpen = false;
+  selectedProductForEdit: Product | null = null;
+  
   private searchSubject = new BehaviorSubject<string>('');
   private categorySubject = new BehaviorSubject<string>('');
   private sortSubject = new BehaviorSubject<string>('');
+  private productsSubject = new BehaviorSubject<Product[]>([]);
   
   constructor() {
     this.product$ = this.productService.GetProducts();
     this.categories$ = this.categoryService.GetCategories();
     
+    // Initialize products
+    this.product$.subscribe(products => {
+      this.productsSubject.next(products);
+    });
+    
     // Combine all filters and create filtered product stream
     this.filteredProducts$ = combineLatest([
-      this.product$,
+      this.productsSubject.asObservable(),
       this.searchSubject.asObservable().pipe(startWith('')),
       this.categorySubject.asObservable().pipe(startWith('')),
       this.sortSubject.asObservable().pipe(startWith(''))
@@ -181,5 +194,28 @@ export class Products {
   // Set view mode (grid or list)
   setViewMode(mode: 'grid' | 'list'): void {
     this.viewMode = mode;
+  }
+
+  // Edit product functionality
+  editProduct(product: Product): void {
+    this.selectedProductForEdit = product;
+    this.isEditModalOpen = true;
+  }
+
+  onEditModalClosed(): void {
+    this.isEditModalOpen = false;
+    this.selectedProductForEdit = null;
+  }
+
+  onProductUpdated(updatedProduct: Product): void {
+    // Update the product in the current products list
+    const currentProducts = this.productsSubject.value;
+    const updatedProducts = currentProducts.map(product => 
+      product.id === updatedProduct.id ? updatedProduct : product
+    );
+    this.productsSubject.next(updatedProducts);
+    
+    // Close the modal
+    this.onEditModalClosed();
   }
 }

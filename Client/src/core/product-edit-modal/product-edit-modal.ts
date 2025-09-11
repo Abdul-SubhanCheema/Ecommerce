@@ -5,7 +5,6 @@ import { ProductService } from '../services/product.service';
 import { CategoryService } from '../services/category.service';
 import { Product, Category } from '../../types/product';
 import { ImageUpload } from '../../layout/image-upload/image-upload';
-import { ImageCropper } from '../../layout/image-cropper/image-cropper';
 
 @Component({
   selector: 'app-product-edit-modal',
@@ -13,6 +12,7 @@ import { ImageCropper } from '../../layout/image-cropper/image-cropper';
   templateUrl: './product-edit-modal.html',
   styleUrl: './product-edit-modal.css'
 })
+
 export class ProductEditModal implements OnChanges {
   private productService = inject(ProductService);
   private categoryService = inject(CategoryService);

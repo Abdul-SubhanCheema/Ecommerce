@@ -43,7 +43,46 @@ export class ImageCropper implements AfterViewInit, OnChanges {
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngAfterViewInit() {
+    console.log('ImageCropper ngAfterViewInit');
+    this.initializeCanvases();
+  }
+
+  ngOnChanges() {
+    console.log('ImageCropper ngOnChanges:', {
+      isOpen: this.isOpen,
+      hasImageFile: !!this.imageFile,
+      hasImageCtx: !!this.imageCtx,
+      hasOverlayCtx: !!this.overlayCtx
+    });
+    
+    if (this.isOpen && this.imageFile) {
+      // Always reinitialize when modal opens to ensure fresh state
+      setTimeout(() => {
+        this.forceReinitialize();
+      }, 150); // Give enough time for DOM to be ready
+    }
+  }
+
+  private forceReinitialize() {
+    console.log('Force reinitializing image cropper...');
+    
+    // Reinitialize canvases
+    this.initializeCanvases();
+    
+    // Small delay to ensure canvases are ready
+    setTimeout(() => {
+      if (this.imageCtx && this.overlayCtx) {
+        console.log('Canvases ready, loading image...');
+        this.loadImage();
+      } else {
+        console.error('Canvases still not ready after reinitialization');
+      }
+    }, 50);
+  }
+
+  private initializeCanvases() {
     if (this.imageCanvas && this.overlayCanvas) {
+      console.log('Initializing canvases...');
       this.imageCtx = this.imageCanvas.nativeElement.getContext('2d')!;
       this.overlayCtx = this.overlayCanvas.nativeElement.getContext('2d')!;
       
@@ -53,21 +92,26 @@ export class ImageCropper implements AfterViewInit, OnChanges {
       imageCanvas.width = overlayCanvas.width = this.canvasDisplayWidth;
       imageCanvas.height = overlayCanvas.height = this.canvasDisplayHeight;
       
-      this.loadImage();
-    }
-  }
-
-  ngOnChanges() {
-    if (this.isOpen && this.imageFile && this.imageCtx && this.overlayCtx) {
-      // Use setTimeout to avoid ExpressionChangedAfterItHasBeenCheckedError
-      setTimeout(() => {
+      if (this.imageFile) {
         this.loadImage();
-      }, 0);
+      }
+    } else {
+      console.warn('Canvas elements not available yet');
     }
   }
 
   private loadImage() {
-    if (!this.imageFile || !this.imageCtx || !this.overlayCtx) return;
+    console.log('loadImage called:', {
+      hasImageFile: !!this.imageFile,
+      hasImageCtx: !!this.imageCtx,
+      hasOverlayCtx: !!this.overlayCtx,
+      isOpen: this.isOpen
+    });
+    
+    if (!this.imageFile || !this.imageCtx || !this.overlayCtx) {
+      console.warn('Missing requirements for loading image');
+      return;
+    }
 
     this.isLoading = true;
     this.cdr.detectChanges(); // Manually trigger change detection
@@ -83,7 +127,12 @@ export class ImageCropper implements AfterViewInit, OnChanges {
     
     const reader = new FileReader();
     reader.onload = (e) => {
+      console.log('FileReader onload fired');
       this.image.onload = () => {
+        console.log('Image onload fired:', {
+          width: this.image.width,
+          height: this.image.height
+        });
         clearTimeout(loadingTimeout);
         try {
           this.resetTransform();
@@ -102,6 +151,7 @@ export class ImageCropper implements AfterViewInit, OnChanges {
         this.cdr.detectChanges();
       };
       this.image.src = e.target?.result as string;
+      console.log('Image src set:', this.image.src.substring(0, 50) + '...');
     };
     reader.onerror = () => {
       clearTimeout(loadingTimeout);
@@ -109,10 +159,17 @@ export class ImageCropper implements AfterViewInit, OnChanges {
       this.isLoading = false;
       this.cdr.detectChanges();
     };
+    console.log('Starting to read file as data URL...');
     reader.readAsDataURL(this.imageFile);
   }
 
   private resetTransform() {
+    console.log('resetTransform called with image:', {
+      width: this.image.width,
+      height: this.image.height,
+      complete: this.image.complete
+    });
+    
     this.scale = 1;
     this.offsetX = 0;
     this.offsetY = 0;
@@ -125,6 +182,8 @@ export class ImageCropper implements AfterViewInit, OnChanges {
     
     const aspectRatio = this.image.width / this.image.height;
     
+    console.log('Canvas sizing:', { maxWidth, maxHeight, aspectRatio });
+    
     if (aspectRatio > maxWidth / maxHeight) {
       imageCanvas.width = overlayCanvas.width = maxWidth;
       imageCanvas.height = overlayCanvas.height = maxWidth / aspectRatio;
@@ -136,13 +195,39 @@ export class ImageCropper implements AfterViewInit, OnChanges {
     // Update display dimensions for responsive CSS
     this.canvasDisplayWidth = imageCanvas.width;
     this.canvasDisplayHeight = imageCanvas.height;
+    
+    console.log('Canvas final dimensions:', {
+      width: imageCanvas.width,
+      height: imageCanvas.height,
+      displayWidth: this.canvasDisplayWidth,
+      displayHeight: this.canvasDisplayHeight
+    });
   }
 
   updatePreview() {
-    if (!this.imageCtx || !this.overlayCtx || !this.image.complete) return;
+    console.log('updatePreview called:', {
+      hasImageCtx: !!this.imageCtx,
+      hasOverlayCtx: !!this.overlayCtx,
+      imageComplete: this.image.complete,
+      imageWidth: this.image.width,
+      imageHeight: this.image.height,
+      scale: this.scale,
+      offsetX: this.offsetX,
+      offsetY: this.offsetY
+    });
+    
+    if (!this.imageCtx || !this.overlayCtx || !this.image.complete) {
+      console.log('updatePreview early return - missing context or image not complete');
+      return;
+    }
 
     const imageCanvas = this.imageCanvas.nativeElement;
     const overlayCanvas = this.overlayCanvas.nativeElement;
+    
+    console.log('Canvas dimensions:', {
+      imageCanvas: { width: imageCanvas.width, height: imageCanvas.height },
+      overlayCanvas: { width: overlayCanvas.width, height: overlayCanvas.height }
+    });
     
     // Clear both canvases
     this.imageCtx.clearRect(0, 0, imageCanvas.width, imageCanvas.height);
@@ -152,6 +237,14 @@ export class ImageCropper implements AfterViewInit, OnChanges {
     this.imageCtx.save();
     this.imageCtx.translate(imageCanvas.width / 2 + this.offsetX, imageCanvas.height / 2 + this.offsetY);
     this.imageCtx.scale(this.scale, this.scale);
+    
+    console.log('Drawing image at:', {
+      x: -this.image.width / 2,
+      y: -this.image.height / 2,
+      width: this.image.width,
+      height: this.image.height
+    });
+    
     this.imageCtx.drawImage(
       this.image,
       -this.image.width / 2,
@@ -161,6 +254,8 @@ export class ImageCropper implements AfterViewInit, OnChanges {
     
     // Draw crop overlay on overlay canvas
     this.drawCropOverlay();
+    
+    console.log('updatePreview completed');
   }
 
   private drawCropOverlay() {

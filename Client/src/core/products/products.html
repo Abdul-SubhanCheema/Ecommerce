@@ -186,7 +186,7 @@
         <!-- Product Image -->
         <div
           [class]="'relative overflow-hidden cursor-pointer ' + (viewMode === 'grid' ? 'h-56' : 'h-48 sm:w-48 sm:min-h-full flex-shrink-0')"
-          [routerLink]="['/productdetail', product.id]">
+          [routerLink]="['/productdetail', product.id]" [queryParams]="{source: 'products'}">
           <img
             [src]="product.productImageUrl || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop'"
             [alt]="product.productName"
@@ -209,7 +209,7 @@
               </span>
               }
           </div>
-          <div class="absolute top-4 right-4">
+          <!-- <div class="absolute top-4 right-4">
             <button
               class="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-colors shadow-lg"
               (click)="$event.stopPropagation()">
@@ -220,7 +220,7 @@
                 </path>
               </svg>
             </button>
-          </div>
+          </div> -->
 
           <!-- Quick View on Hover -->
           <div
@@ -242,7 +242,7 @@
           <!-- Product Name -->
           <h3
             [class]="'font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-orange-600 transition-colors cursor-pointer ' + (viewMode === 'grid' ? 'text-lg' : 'text-lg sm:text-xl')"
-            [routerLink]="['/productdetail', product.id]">
+            [routerLink]="['/productdetail', product.id]" [queryParams]="{source: 'products'}">
             {{product.productName}}
           </h3>
 

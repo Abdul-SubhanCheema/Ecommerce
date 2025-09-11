@@ -2,15 +2,18 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
 import { CartService } from '../services/cart.service';
+import { PhotoService, Photo } from '../services/photo.service';
+import { AccountService } from '../services/account-service';
 import { Product } from '../../types/product';
 import { AsyncPipe, CommonModule, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Observable, catchError, of } from 'rxjs';
+import { Observable, catchError, of, BehaviorSubject } from 'rxjs';
 import { ReviewsComponent } from '../reviews/reviews';
+import { PhotoEditModal } from '../photo-edit-modal/photo-edit-modal';
 
 @Component({
   selector: 'app-productdetail',
-  imports: [AsyncPipe, CommonModule, FormsModule, NgClass, ReviewsComponent],
+  imports: [AsyncPipe, CommonModule, FormsModule, NgClass, ReviewsComponent, PhotoEditModal],
   templateUrl: './productdetail.html',
   styleUrl: './productdetail.css'
 })
@@ -20,8 +23,11 @@ export class Productdetail implements OnInit {
   
   private productService = inject(ProductService);
   private cartService = inject(CartService);
+  private photoService = inject(PhotoService);
+  protected accountService = inject(AccountService);
 
   product$!: Observable<Product | null>;
+  private productSubject = new BehaviorSubject<Product | null>(null);
   productId!: string;
   loading = true;
   error = false;
@@ -30,6 +36,11 @@ export class Productdetail implements OnInit {
   currentImageIndex: number = 0;
   selectedQuantity: number = 1;
   activeTab: 'details' | 'reviews' = 'details';
+  
+  // Navigation context
+  sourceePage: string = 'products'; // Default to products
+  backButtonLabel: string = 'Back to Products';
+  breadcrumbLabel: string = 'Products';
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -37,26 +48,53 @@ export class Productdetail implements OnInit {
       if (this.productId) {
         this.loading = true;
         this.error = false;
-        this.product$ = this.productService.GetProductById(this.productId).pipe(
-          catchError(err => {
-            console.error('Error loading product:', err);
-            this.error = true;
-            this.loading = false;
-            return of(null);
-          })
-        );
-
-        // Subscribe to get the current product for cart operations
-        this.product$.subscribe(product => {
-          this.currentProduct = product;
-          this.loading = false;
-        });
+        
+        // Set up the observable to use our BehaviorSubject
+        this.product$ = this.productSubject.asObservable();
+        
+        // Load the product initially
+        this.loadProduct();
       }
+    });
+
+    // Check query parameters for source page
+    this.route.queryParams.subscribe(queryParams => {
+      this.sourceePage = queryParams['source'] || 'products';
+      this.updateNavigationLabels();
+    });
+  }
+
+  private updateNavigationLabels() {
+    if (this.sourceePage === 'deals') {
+      this.backButtonLabel = 'Back to Deals';
+      this.breadcrumbLabel = 'Deals';
+    } else {
+      this.backButtonLabel = 'Back to Products';
+      this.breadcrumbLabel = 'Products';
+    }
+  }
+
+  private loadProduct() {
+    this.productService.GetProductById(this.productId).pipe(
+      catchError(err => {
+        console.error('Error loading product:', err);
+        this.error = true;
+        this.loading = false;
+        return of(null);
+      })
+    ).subscribe(product => {
+      this.currentProduct = product;
+      this.productSubject.next(product); // Update the BehaviorSubject
+      this.loading = false;
     });
   }
 
   goBack() {
-    this.router.navigate(['/Products-list']);
+    if (this.sourceePage === 'deals') {
+      this.router.navigate(['/deals']);
+    } else {
+      this.router.navigate(['/Products-list']);
+    }
   }
 
 
@@ -185,6 +223,105 @@ export class Productdetail implements OnInit {
   set quantity(value: number) {
     if (value >= 1) {
       this.selectedQuantity = value;
+    }
+  }
+
+  // Photo management methods
+  editPhoto(photoId: number, currentUrl: string): void {
+    // Open photo edit modal instead of simple prompt
+    this.openPhotoEditModal(photoId, currentUrl);
+  }
+
+  deletePhoto(photoId: number, photoUrl: string): void {
+    if (confirm('Are you sure you want to delete this image? This action cannot be undone.')) {
+      this.photoService.deletePhoto(photoId).subscribe({
+        next: () => {
+          // Update current product immediately for instant UI feedback
+          if (this.currentProduct && this.currentProduct.photos) {
+            this.currentProduct.photos = this.currentProduct.photos.filter(p => p.id !== photoId);
+            
+            // Reset selected image if it was deleted
+            if (this.selectedImageUrl === photoUrl) {
+              const remainingImages = this.getAllImages(this.currentProduct);
+              if (remainingImages.length > 0) {
+                this.selectedImageUrl = remainingImages[0];
+                this.currentImageIndex = 0;
+              } else {
+                this.selectedImageUrl = '';
+                this.currentImageIndex = 0;
+              }
+            }
+            
+            // Update the BehaviorSubject to trigger UI update immediately
+            this.productSubject.next(this.currentProduct);
+          }
+          
+          // Also refresh from server to ensure consistency
+          this.refreshProduct();
+          alert('Photo deleted successfully!');
+        },
+        error: (error) => {
+          console.error('Error deleting photo:', error);
+          alert('Failed to delete photo. Please try again.');
+        }
+      });
+    }
+  }
+
+  // Photo edit modal properties
+  showPhotoEditModal = false;
+  editingPhotoId: number | null = null;
+  editingPhotoUrl: string = '';
+
+  openPhotoEditModal(photoId: number, currentUrl: string): void {
+    this.editingPhotoId = photoId;
+    this.editingPhotoUrl = currentUrl;
+    this.showPhotoEditModal = true;
+  }
+
+  closePhotoEditModal(): void {
+    this.showPhotoEditModal = false;
+    this.editingPhotoId = null;
+    this.editingPhotoUrl = '';
+  }
+
+  onPhotoUpdated(newUrl: string): void {
+    // Since the PhotoEditModal handles the delete and upload, 
+    // we just need to refresh the product data to get the updated photos
+    this.refreshProduct();
+    this.closePhotoEditModal();
+    alert('Photo updated successfully!');
+  }
+
+  getPhotoIdFromUrl(photoUrl: string): number | null {
+    if (!this.currentProduct || !this.currentProduct.photos) {
+      return null;
+    }
+    
+    const photo = this.currentProduct.photos.find(p => p.url === photoUrl);
+    return photo ? photo.id : null;
+  }
+
+  private refreshProduct(): void {
+    if (this.productId) {
+      this.productService.GetProductById(this.productId).pipe(
+        catchError(err => {
+          console.error('Error refreshing product:', err);
+          return of(null);
+        })
+      ).subscribe(product => {
+        this.currentProduct = product;
+        this.productSubject.next(product); // Update the BehaviorSubject
+        
+        // Reset image selection if current image was deleted
+        if (product && this.selectedImageUrl) {
+          const allImages = this.getAllImages(product);
+          if (!allImages.includes(this.selectedImageUrl)) {
+            this.selectedImageUrl = '';
+            this.currentImageIndex = 0;
+          }
+        }
+      });
     }
   }
 }

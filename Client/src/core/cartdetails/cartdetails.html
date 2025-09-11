@@ -191,10 +191,16 @@
               <div class="border-t border-gray-200 pt-4">
                 <div class="flex justify-between text-lg font-bold text-gray-900">
                   <span>Total</span>
-                  <span>${{(cartService.totalPrice() * 1.08).toFixed(2)}}</span>
+                  @if (cartService.totalPrice()>50) {
+                    <span>${{(cartService.totalPrice() * 1.08).toFixed(2)}}</span>
+                  } @else {
+                    <span>${{(cartService.totalPrice() * 1.08 + 5.99).toFixed(2)}}</span>
+                  }
+              
                 </div>
               </div>
             </div>
+            
             
             <!-- Checkout Button -->
             <button 

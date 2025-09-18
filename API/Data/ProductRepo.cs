@@ -63,6 +63,11 @@ public class ProductRepo(AppDbContext context) : IProductRepo
         context.Entry(product).State = EntityState.Modified;
     }
     
+    public void Delete(Product product)
+    {
+        context.Product.Remove(product);
+    }
+    
     public async Task Add(Product product)
     {
         await context.Product.AddAsync(product);

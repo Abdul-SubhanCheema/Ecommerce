@@ -136,6 +136,23 @@ namespace API.Controllers
             return BadRequest("Failed to create product.");
         }
 
+        // 🗑️ DELETE product
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteProduct(string id)
+        {
+            var product = await _productRepo.GetProductByIdSAsync(id);
+            if (product == null) return NotFound("Product not found.");
+
+            _productRepo.Delete(product);
+
+            if (await _productRepo.SaveAllAsync())
+            {
+                return NoContent(); // 204 No Content for successful deletion
+            }
+
+            return BadRequest("Failed to delete product.");
+        }
+
         // Mapping methods
         private static ProductDto MapToProductDto(Product product)
         {

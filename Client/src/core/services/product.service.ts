@@ -27,6 +27,10 @@ export class ProductService {
     return this.http.put<Product>(this.baseUrl + "/product/" + id, productData);
   }
 
+  DeleteProduct(id: string){
+    return this.http.delete(this.baseUrl + "/product/" + id);
+  }
+
   UploadProductPhoto(file: File, productId: string){
     console.log('UploadProductPhoto called with:', {
       productId,

@@ -5,6 +5,7 @@ namespace API.Interfaces;
 public interface IProductRepo
 {
     void Update(Product product);
+    void Delete(Product product);
     Task<bool> SaveAllAsync();
 
     Task<IReadOnlyList<Product>> GetAllProducts();

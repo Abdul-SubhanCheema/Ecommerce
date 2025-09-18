@@ -218,4 +218,24 @@ export class Products {
     // Close the modal
     this.onEditModalClosed();
   }
+
+  // Delete product functionality
+  deleteProduct(product: Product): void {
+    if (confirm(`Are you sure you want to delete "${product.productName}"? This action cannot be undone.`)) {
+      this.productService.DeleteProduct(product.id).subscribe({
+        next: () => {
+          // Remove the product from the current products list
+          const currentProducts = this.productsSubject.value;
+          const updatedProducts = currentProducts.filter(p => p.id !== product.id);
+          this.productsSubject.next(updatedProducts);
+          
+          alert('Product deleted successfully!');
+        },
+        error: (error) => {
+          console.error('Error deleting product:', error);
+          alert('Failed to delete product. Please try again.');
+        }
+      });
+    }
+  }
 }

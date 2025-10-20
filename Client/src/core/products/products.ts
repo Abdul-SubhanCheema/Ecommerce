@@ -9,10 +9,12 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AccountService } from '../services/account-service';
 import { ProductEditModal } from '../product-edit-modal/product-edit-modal';
+import { ToastService } from '../services/toast.service';
+import { ConfirmationModal } from '../confirmation-modal/confirmation-modal';
 
 @Component({
   selector: 'app-products',
-  imports: [AsyncPipe, RouterLink, NgClass, FormsModule, ProductEditModal],
+  imports: [AsyncPipe, RouterLink, NgClass, FormsModule, ProductEditModal, ConfirmationModal],
   templateUrl: './products.html',
   styleUrl: './products.css'
 })
@@ -21,6 +23,7 @@ export class Products {
   categoryService = inject(CategoryService);
   protected accountService = inject(AccountService);
   cartService = inject(CartService);
+  private toastService = inject(ToastService);
   
   protected product$: Observable<Product[]>;
   protected categories$: Observable<Category[]>;
@@ -35,6 +38,18 @@ export class Products {
   // Edit modal state
   isEditModalOpen = false;
   selectedProductForEdit: Product | null = null;
+  
+  // Delete confirmation modal state
+  isDeleteModalOpen = false;
+  productToDelete: Product | null = null;
+  
+  // Getter for delete confirmation message
+  get deleteConfirmationMessage(): string {
+    if (this.productToDelete) {
+      return `Are you sure you want to delete "${this.productToDelete.productName}"? This action cannot be undone and will permanently remove the product from your catalog.`;
+    }
+    return 'Are you sure you want to delete this product? This action cannot be undone.';
+  }
   
   private searchSubject = new BehaviorSubject<string>('');
   private categorySubject = new BehaviorSubject<string>('');
@@ -182,12 +197,12 @@ export class Products {
     if (product.quantity > 0) {
       try {
         this.cartService.addToCart(product, 1);
-        alert(`${product.productName} added to cart!`);
+        this.toastService.cartAdded(product.productName);
       } catch (error: any) {
-        alert(error.message);
+        this.toastService.error(error.message, { icon: '⚠️' });
       }
     } else {
-      alert('This product is out of stock.');
+      this.toastService.outOfStock(product.productName);
     }
   }
 
@@ -215,27 +230,47 @@ export class Products {
     );
     this.productsSubject.next(updatedProducts);
     
+    // Show success toast notification
+    this.toastService.success(`"${updatedProduct.productName}" updated successfully!`, { icon: '✏️', duration: 3000 });
+    
     // Close the modal
     this.onEditModalClosed();
   }
 
   // Delete product functionality
   deleteProduct(product: Product): void {
-    if (confirm(`Are you sure you want to delete "${product.productName}"? This action cannot be undone.`)) {
-      this.productService.DeleteProduct(product.id).subscribe({
-        next: () => {
-          // Remove the product from the current products list
-          const currentProducts = this.productsSubject.value;
-          const updatedProducts = currentProducts.filter(p => p.id !== product.id);
-          this.productsSubject.next(updatedProducts);
-          
-          alert('Product deleted successfully!');
-        },
-        error: (error) => {
-          console.error('Error deleting product:', error);
-          alert('Failed to delete product. Please try again.');
-        }
-      });
-    }
+    this.productToDelete = product;
+    this.isDeleteModalOpen = true;
+  }
+  
+  // Confirm product deletion
+  onConfirmDelete(): void {
+    if (!this.productToDelete) return;
+    
+    this.productService.DeleteProduct(this.productToDelete.id).subscribe({
+      next: () => {
+        // Remove the product from the current products list
+        const currentProducts = this.productsSubject.value;
+        const updatedProducts = currentProducts.filter(p => p.id !== this.productToDelete!.id);
+        this.productsSubject.next(updatedProducts);
+        
+        this.toastService.success('Product deleted successfully!', { icon: '🗑️', duration: 3000 });
+        this.isDeleteModalOpen = false;
+        this.productToDelete = null;
+      },
+      error: (error) => {
+        console.error('Error deleting product:', error);
+        this.toastService.error('Failed to delete product. Please try again.', { icon: '❌', duration: 5000 });
+        this.isDeleteModalOpen = false;
+        this.productToDelete = null;
+      }
+    });
+  }
+  
+  // Cancel product deletion
+  onCancelDelete(): void {
+    this.isDeleteModalOpen = false;
+    this.productToDelete = null;
+    this.toastService.info('Product deletion cancelled');
   }
 }

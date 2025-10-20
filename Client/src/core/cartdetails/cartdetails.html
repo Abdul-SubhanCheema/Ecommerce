@@ -247,3 +247,13 @@
     
   </div>
 </div>
+
+<!-- Confirmation Modal -->
+<app-confirmation-modal
+  [isOpen]="isConfirmModalOpen"
+  title="Clear Cart"
+  message="Are you sure you want to remove all items from your cart? This action cannot be undone."
+  confirmButtonText="Clear Cart"
+  (confirmed)="onConfirmClearCart()"
+  (cancelled)="onCancelClearCart()">
+</app-confirmation-modal>

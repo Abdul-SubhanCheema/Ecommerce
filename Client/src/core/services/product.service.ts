@@ -31,6 +31,18 @@ export class ProductService {
     return this.http.delete(this.baseUrl + "/product/" + id);
   }
 
+  CreateProduct(productData: any){
+    return this.http.post<Product>(this.baseUrl + "/product", productData);
+  }
+
+  SetMainProductImage(file: File, productId: string){
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('id', productId);
+    
+    return this.http.post<any>(this.baseUrl + "/product/main-image", formData);
+  }
+
   UploadProductPhoto(file: File, productId: string){
     console.log('UploadProductPhoto called with:', {
       productId,

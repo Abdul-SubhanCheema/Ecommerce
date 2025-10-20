@@ -1,0 +1,49 @@
+/* Custom styles for Add Product Modal */
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { 
+    opacity: 0; 
+    transform: scale(0.95); 
+  }
+  to { 
+    opacity: 1; 
+    transform: scale(1); 
+  }
+}
+
+/* Form field focus styles */
+input:focus, 
+textarea:focus, 
+select:focus {
+  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
+}
+
+/* File upload area styles */
+.drag-active {
+  border-color: #fb923c;
+  background-color: #fed7aa;
+}
+
+/* Loading spinner */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

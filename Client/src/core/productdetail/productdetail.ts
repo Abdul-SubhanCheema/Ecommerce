@@ -8,6 +8,7 @@ import { Product } from '../../types/product';
 import { AsyncPipe, CommonModule, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Observable, catchError, of, BehaviorSubject } from 'rxjs';
+import { ToastService } from '../services/toast.service';
 import { ReviewsComponent } from '../reviews/reviews';
 import { PhotoEditModal } from '../photo-edit-modal/photo-edit-modal';
 
@@ -25,6 +26,7 @@ export class Productdetail implements OnInit {
   private cartService = inject(CartService);
   private photoService = inject(PhotoService);
   protected accountService = inject(AccountService);
+  private toastService = inject(ToastService);
 
   product$!: Observable<Product | null>;
   private productSubject = new BehaviorSubject<Product | null>(null);
@@ -119,18 +121,19 @@ export class Productdetail implements OnInit {
     if (this.currentProduct && this.selectedQuantity > 0) {
       // Check if product is in stock
       if (this.currentProduct.quantity < this.selectedQuantity) {
-        alert(`Sorry, only ${this.currentProduct.quantity} items available in stock.`);
+        this.toastService.error(`Sorry, only ${this.currentProduct.quantity} items available in stock.`, { icon: '📦' });
         return;
       }
 
       try {
         this.cartService.addToCart(this.currentProduct, this.selectedQuantity);
-        alert(`${this.selectedQuantity} ${this.currentProduct.productName}(s) added to cart!`);
+        const quantityText = this.selectedQuantity === 1 ? '' : `${this.selectedQuantity} `;
+        this.toastService.success(`${quantityText}${this.currentProduct.productName} added to cart!`, { icon: '🛍️' });
       } catch (error: any) {
-        alert(error.message);
+        this.toastService.error(error.message, { icon: '⚠️' });
       }
     } else {
-      alert('Unable to add product to cart. Please try again.');
+      this.toastService.error('Unable to add product to cart. Please try again.', { icon: '❌' });
     }
   }
 
@@ -138,7 +141,7 @@ export class Productdetail implements OnInit {
     // TODO: Implement buy now functionality
     console.log('Buy now for product:', this.productId);
     // Navigate to checkout or show buy now modal
-    alert('Redirecting to checkout...');
+    this.toastService.info('Redirecting to checkout...');
   }
 
   // Helper methods
@@ -183,7 +186,8 @@ export class Productdetail implements OnInit {
     if (product.photos && product.photos.length > 0) {
       images.push(...product.photos.map(photo => photo.url));
     }
-    return images;
+    // Remove duplicates by converting to Set and back to array
+    return [...new Set(images)];
   }
 
   nextImage(product: Product): void {
@@ -258,11 +262,11 @@ export class Productdetail implements OnInit {
           
           // Also refresh from server to ensure consistency
           this.refreshProduct();
-          alert('Photo deleted successfully!');
+          this.toastService.success('Photo deleted successfully!');
         },
         error: (error) => {
           console.error('Error deleting photo:', error);
-          alert('Failed to delete photo. Please try again.');
+          this.toastService.error('Failed to delete photo. Please try again.');
         }
       });
     }
@@ -290,7 +294,7 @@ export class Productdetail implements OnInit {
     // we just need to refresh the product data to get the updated photos
     this.refreshProduct();
     this.closePhotoEditModal();
-    alert('Photo updated successfully!');
+    this.toastService.success('Photo updated successfully!');
   }
 
   getPhotoIdFromUrl(photoUrl: string): number | null {

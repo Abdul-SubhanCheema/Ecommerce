@@ -1,0 +1,425 @@
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4" [class.hidden]="!isOpen">
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-black bg-opacity-50 transition-opacity" (click)="closeModal()"></div>
+  
+  <!-- Modal Content -->
+  <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden transform transition-all">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-bold text-white">Add New Product</h2>
+        <button 
+          (click)="closeModal()"
+          class="text-white hover:text-orange-200 transition-colors p-1">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="p-6 overflow-y-auto max-h-[calc(90vh-160px)]">
+      <form (ngSubmit)="onSubmit()" #addProductForm="ngForm">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Left Column - Product Details -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Product Information</h3>
+            
+            <!-- Product Name -->
+            <div>
+              <label for="productName" class="block text-sm font-medium text-gray-700 mb-2">
+                Product Name <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="productName"
+                name="productName"
+                [(ngModel)]="productForm.productName"
+                required
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                placeholder="Enter product name">
+            </div>
+
+            <!-- Description -->
+            <div>
+              <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                Description <span class="text-red-500">*</span>
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                [(ngModel)]="productForm.description"
+                required
+                rows="4"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors resize-none"
+                placeholder="Enter product description"></textarea>
+            </div>
+
+            <!-- Price and Discount -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
+                  Price ($) <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="price"
+                  name="price"
+                  [(ngModel)]="productForm.price"
+                  required
+                  min="0"
+                  step="0.01"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                  placeholder="0.00">
+              </div>
+              <div>
+                <label for="discount" class="block text-sm font-medium text-gray-700 mb-2">
+                  Discount ($)
+                </label>
+                <input
+                  type="number"
+                  id="discount"
+                  name="discount"
+                  [(ngModel)]="productForm.discount"
+                  min="0"
+                  step="0.01"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                  placeholder="0.00">
+              </div>
+            </div>
+
+            <!-- Quantity and Brand -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label for="quantity" class="block text-sm font-medium text-gray-700 mb-2">
+                  Quantity <span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="number"
+                  id="quantity"
+                  name="quantity"
+                  [(ngModel)]="productForm.quantity"
+                  required
+                  min="0"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                  placeholder="0">
+              </div>
+              <div>
+                <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">
+                  Brand
+                </label>
+                <input
+                  type="text"
+                  id="brand"
+                  name="brand"
+                  [(ngModel)]="productForm.brand"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                  placeholder="Enter brand name">
+              </div>
+            </div>
+
+            <!-- Category -->
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <label for="category" class="block text-sm font-medium text-gray-700">
+                  Category
+                </label>
+                <div class="flex items-center gap-2">
+                  <button
+                    type="button"
+                    (click)="toggleCategoryManagement()"
+                    class="text-sm text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    Manage
+                  </button>
+                  <button
+                    type="button"
+                    (click)="toggleCategoryMode()"
+                    class="text-sm text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1">
+                    @if (!showCreateNewCategory) {
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                      </svg>
+                      Create New
+                    } @else {
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                      </svg>
+                      Select Existing
+                    }
+                  </button>
+                </div>
+              </div>
+
+              @if (!showCreateNewCategory) {
+                <!-- Existing Category Selection -->
+                <select
+                  id="category"
+                  name="categoryId"
+                  [(ngModel)]="productForm.categoryId"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors">
+                  <option [ngValue]="null">Select a category</option>
+                  @for (category of categories; track category.id) {
+                    <option [ngValue]="category.id">{{ category.name }}</option>
+                  }
+                </select>
+              } @else {
+                <!-- Create New Category -->
+                <div class="space-y-3">
+                  <div class="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Enter new category name"
+                      [(ngModel)]="newCategoryName"
+                      name="newCategoryName"
+                      (keydown.enter)="createNewCategory($event)"
+                      class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 outline-none transition-colors"
+                      [disabled]="isCreatingCategory">
+                    <button
+                      type="button"
+                      (click)="createNewCategory()"
+                      [disabled]="isCreatingCategory || !newCategoryName.trim()"
+                      class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2">
+                      @if (isCreatingCategory) {
+                        <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2v4m0 12v4m8-8h-4M4 12H0m15.071-8.071l-2.828 2.828M8.757 15.071l-2.828 2.828M15.071 19.071l2.828-2.828M8.757 8.757L5.93 5.93"></path>
+                        </svg>
+                        Creating...
+                      } @else {
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Create
+                      }
+                    </button>
+                  </div>
+                  @if (productForm.categoryId) {
+                    <div class="text-sm text-green-600 bg-green-50 px-3 py-2 rounded-lg flex items-center gap-2">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                      </svg>
+                      Category created and selected successfully!
+                    </div>
+                  }
+                </div>
+              }
+
+              <!-- Category Management Panel -->
+              @if (showCategoryManagement) {
+                <div class="mt-4 border border-gray-200 rounded-lg p-4 bg-gray-50">
+                  <h4 class="text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14-7v14a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2h10a2 2 0 012 2zM9 11h6"></path>
+                    </svg>
+                    Manage Categories
+                  </h4>
+                  
+                  <div class="space-y-2 max-h-40 overflow-y-auto">
+                    @for (category of categories; track category.id) {
+                      <div class="flex items-center justify-between py-2 px-3 bg-white rounded-md border border-gray-200">
+                        @if (editingCategoryId === category.id) {
+                          <!-- Edit Mode -->
+                          <div class="flex-1 flex items-center gap-2">
+                            <input
+                              type="text"
+                              [(ngModel)]="editingCategoryName"
+                              name="editCategoryName"
+                              class="flex-1 px-2 py-1 text-sm border border-gray-300 rounded focus:ring-1 focus:ring-orange-500 focus:border-orange-500 outline-none"
+                              (keydown.enter)="updateCategory(category.id)"
+                              (keydown.escape)="cancelEditCategory()">
+                            <div class="flex gap-1">
+                              <button
+                                type="button"
+                                (click)="updateCategory(category.id)"
+                                [disabled]="isUpdatingCategory"
+                                class="px-2 py-1 text-xs bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 flex items-center gap-1">
+                                @if (isUpdatingCategory) {
+                                  <svg class="w-3 h-3 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                  </svg>
+                                } @else {
+                                  ✓
+                                }
+                              </button>
+                              <button
+                                type="button"
+                                (click)="cancelEditCategory()"
+                                class="px-2 py-1 text-xs bg-gray-500 text-white rounded hover:bg-gray-600">
+                                ✕
+                              </button>
+                            </div>
+                          </div>
+                        } @else {
+                          <!-- View Mode -->
+                          <span class="flex-1 text-sm text-gray-700">{{ category.name }}</span>
+                          <div class="flex gap-1">
+                            <button
+                              type="button"
+                              (click)="startEditCategory(category)"
+                              class="px-2 py-1 text-xs text-blue-600 hover:bg-blue-50 rounded flex items-center gap-1"
+                              title="Edit category">
+                              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                              </svg>
+                            </button>
+                            <button
+                              type="button"
+                              (click)="deleteCategory(category)"
+                              [disabled]="isDeletingCategory"
+                              class="px-2 py-1 text-xs text-red-600 hover:bg-red-50 rounded disabled:opacity-50 flex items-center gap-1"
+                              title="Delete category">
+                              <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                              </svg>
+                            </button>
+                          </div>
+                        }
+                      </div>
+                    } @empty {
+                      <div class="text-center py-4 text-gray-500 text-sm">
+                        No categories found
+                      </div>
+                    }
+                  </div>
+
+                  <div class="mt-3 pt-3 border-t border-gray-200">
+                    <button
+                      type="button"
+                      (click)="toggleCategoryManagement()"
+                      class="text-sm text-gray-600 hover:text-gray-800">
+                      Close Management Panel
+                    </button>
+                  </div>
+                </div>
+              }
+            </div>
+
+            <!-- Active Status -->
+            <div>
+              <label class="flex items-center">
+                <input
+                  type="checkbox"
+                  name="isActive"
+                  [(ngModel)]="productForm.isActive"
+                  class="rounded border-gray-300 text-orange-600 shadow-sm focus:border-orange-300 focus:ring focus:ring-orange-200 focus:ring-opacity-50">
+                <span class="ml-2 text-sm text-gray-700">Product is active</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Right Column - Product Image -->
+          <div class="space-y-4">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Product Image</h3>
+            
+            <!-- Image Preview -->
+            @if (productImageUrl) {
+              <div class="mb-4">
+                <div class="relative bg-gray-100 rounded-lg p-4">
+                  <img [src]="productImageUrl" alt="Product preview" class="w-full h-48 object-cover rounded-lg">
+                  <button
+                    type="button"
+                    (click)="removeImage()"
+                    class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-1 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            }
+
+            <!-- Upload Area -->
+            @if (!productImageUrl) {
+              <div 
+                class="border-2 border-dashed rounded-lg p-8 text-center transition-colors"
+                [class.border-orange-400]="isDragOver"
+                [class.bg-orange-50]="isDragOver"
+                [class.border-gray-300]="!isDragOver"
+                [class.bg-gray-50]="!isDragOver"
+                (dragover)="onDragOver($event)"
+                (dragleave)="onDragLeave($event)"
+                (drop)="onDrop($event)">
+                
+                <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                
+                <p class="text-gray-600 mb-2">Drag and drop an image here, or</p>
+                <button 
+                  type="button"
+                  (click)="triggerFileInput()"
+                  class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition-colors">
+                  Choose File
+                </button>
+                
+                <input 
+                  type="file" 
+                  id="productImageInput"
+                  [attr.key]="fileInputKey"
+                  class="hidden" 
+                  accept="image/*"
+                  (change)="onFileSelected($event)">
+                
+                <p class="text-sm text-gray-500 mt-2">PNG, JPG, GIF up to 10MB</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        @if (errorMessage) {
+          <div class="bg-red-50 border border-red-200 rounded-lg p-4 mt-6">
+            <div class="flex">
+              <svg class="w-5 h-5 text-red-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="text-red-700">{{ errorMessage }}</span>
+            </div>
+          </div>
+        }
+
+        <!-- Loading State -->
+        @if (isSubmitting) {
+          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+            <div class="flex items-center">
+              <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
+              <span class="text-blue-700">Creating product...</span>
+            </div>
+          </div>
+        }
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-50 px-6 py-4 border-t border-gray-200">
+      <div class="flex justify-end space-x-3">
+        <button 
+          type="button"
+          (click)="closeModal()"
+          class="px-6 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+          Cancel
+        </button>
+        <button 
+          type="submit"
+          (click)="onSubmit()"
+          [disabled]="isSubmitting || !addProductForm.valid"
+          class="px-6 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+          {{ isSubmitting ? 'Creating...' : 'Create Product' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image Cropper Modal -->
+<app-image-cropper
+  [isOpen]="showImageCropper"
+  [imageFile]="selectedFile"
+  (imageCropped)="onImageCropped($event)"
+  (cancelled)="onCropCancelled()">
+</app-image-cropper>

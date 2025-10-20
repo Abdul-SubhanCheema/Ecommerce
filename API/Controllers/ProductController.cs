@@ -17,6 +17,7 @@ namespace API.Controllers
             var productDtos = products.Select(MapToProductDto).ToList();
             return Ok(productDtos);
         }
+        
         [HttpGet("deals")]
         public async Task<ActionResult<IReadOnlyList<ProductDto>>> GetDealsProducts()
         {
@@ -114,23 +115,65 @@ namespace API.Controllers
             if (await _productRepo.SaveAllAsync()) return photo;
 
             return BadRequest("Failed to add photo to product.");
+        }
 
+        [HttpPost("main-image")]
+        [RequestSizeLimit(100 * 1024 * 1024)] // 100MB limit
+        [Consumes("multipart/form-data")]
+        public async Task<ActionResult<object>> SetMainImage([FromForm] IFormFile file, [FromForm] string id)
+        {
+            if (file == null || string.IsNullOrEmpty(id))
+            {
+                return BadRequest("File and ID are required.");
+            }
+            
+            var product = await _productRepo.GetProductForUpdate(id);
+            if (product == null) return BadRequest("Product not found.");
 
+            var result = await photoService.UploadPhotoAsync(file);
+            if (result.Error != null) return BadRequest(result.Error.Message);
+            
+            // Only set the main product image URL, don't add to Photos collection
+            product.ProductImageUrl = result.SecureUrl.AbsoluteUri;
+            
+            if (await _productRepo.SaveAllAsync()) 
+            {
+                return Ok(new { Url = result.SecureUrl.AbsoluteUri, PublicId = result.PublicId });
+            }
 
+            return BadRequest("Failed to set main product image.");
         }
 
 
-        // 🚀 POST add new product with photos
+        // 🚀 POST add new product
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateProduct(Product product)
+        public async Task<ActionResult<ProductDto>> CreateProduct(ProductCreateDto createDto)
         {
+            // Map DTO to Product entity
+            var product = new Product
+            {
+                ProductName = createDto.ProductName,
+                Description = createDto.Description,
+                Price = createDto.Price,
+                Discount = createDto.Discount,
+                Quantity = createDto.Quantity,
+                Brand = createDto.Brand,
+                CategoryId = createDto.CategoryId,
+                IsActive = createDto.IsActive,
+                CreatedAt = DateTime.UtcNow
+            };
+
             // Add product to context
             await _productRepo.Add(product);
 
             if (await _productRepo.SaveAllAsync())
             {
-                // Return 201 Created with route to newly added product
-                return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, product);
+                // Get the created product with navigation properties
+                var createdProduct = await _productRepo.GetProductByIdSAsync(product.Id);
+                if (createdProduct != null)
+                {
+                    return CreatedAtAction(nameof(GetProductById), new { id = product.Id }, MapToProductDto(createdProduct));
+                }
             }
 
             return BadRequest("Failed to create product.");

@@ -7,6 +7,7 @@ import { Product, Category } from '../../types/product';
 import { AsyncPipe, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ToastService } from '../services/toast.service';
 
 interface FeaturedBrand {
   id: string;
@@ -27,6 +28,7 @@ export class Deals implements OnInit, OnDestroy {
   productService = inject(ProductService);
   categoryService = inject(CategoryService);
   cartService = inject(CartService);
+  private toastService = inject(ToastService);
   
   protected product$: Observable<Product[]>;
   protected categories$: Observable<Category[]>;
@@ -287,12 +289,12 @@ export class Deals implements OnInit, OnDestroy {
     if (product.quantity > 0) {
       try {
         this.cartService.addToCart(product, 1);
-        alert(`${product.productName} added to cart!`);
+        this.toastService.cartAdded(product.productName);
       } catch (error: any) {
-        alert(error.message);
+        this.toastService.error(error.message, { icon: '⚠️' });
       }
     } else {
-      alert('This product is out of stock.');
+      this.toastService.outOfStock(product.productName);
     }
   }
 

@@ -15,3 +15,4 @@ RUN mkdir -p /app/Data
 
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "API.dll"]
+

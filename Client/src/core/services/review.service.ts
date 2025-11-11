@@ -29,4 +29,14 @@ export class ReviewService {
 		// 	error: err => console.warn('Stats load failed', err)
 		// });
 	}
+
+	async submitReview(reviewData: { Title: string; Comment: string; Rating: number; ProductId: string; UserId: string }): Promise<boolean> {
+		try {
+			const result = await this.http.post<Review>(`${this.baseUrl}`, reviewData).toPromise();
+			return !!result;
+		} catch (error: any) {
+			console.error('Failed to submit review:', error);
+			throw new Error(error?.error?.message || 'Failed to submit review');
+		}
+	}
 }

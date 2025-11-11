@@ -3,6 +3,8 @@ using API.DTOs;
 using API.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace API.Controllers;
 
@@ -76,15 +78,27 @@ public class ReviewController : BaseApiController
     }
 
     [HttpPost]
-    public async Task<ActionResult<Review>> CreateReview(ReviewCreateDto reviewDto)
+    [Authorize]
+    public async Task<ActionResult<ReviewDto>> CreateReview(ReviewCreateDto reviewDto)
     {
+        // Get the authenticated user's ID from JWT token
+        var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        
+        if (string.IsNullOrEmpty(currentUserId))
+        {
+            return Unauthorized(new { message = "User authentication required" });
+        }
+
+        // Override userId with authenticated user (security measure)
+        reviewDto.UserId = currentUserId;
+
         // Check if user already reviewed this product
         var existingReview = await _context.Reviews
             .FirstOrDefaultAsync(r => r.ProductId == reviewDto.ProductId && r.UserId == reviewDto.UserId);
 
         if (existingReview != null)
         {
-            return BadRequest(new { message = "User has already reviewed this product" });
+            return Conflict(new { message = "You have already reviewed this product" });
         }
 
         // Verify product exists
@@ -101,25 +115,46 @@ public class ReviewController : BaseApiController
             return BadRequest(new { message = "User not found" });
         }
 
+        // Validate rating
+        if (reviewDto.Rating < 1 || reviewDto.Rating > 5)
+        {
+            return BadRequest(new { message = "Rating must be between 1 and 5" });
+        }
+
         var review = new Review
         {
             Title = reviewDto.Title,
             Comment = reviewDto.Comment,
             Rating = reviewDto.Rating,
             ProductId = reviewDto.ProductId,
-            UserId = reviewDto.UserId
+            UserId = reviewDto.UserId,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
         _context.Reviews.Add(review);
         await _context.SaveChangesAsync();
 
-        // Return review with included data
-        var createdReview = await _context.Reviews
-            .Include(r => r.User)
-            .Include(r => r.Product)
-            .FirstOrDefaultAsync(r => r.Id == review.Id);
+        // Return clean DTO to avoid circular reference
+        var createdReviewDto = new ReviewDto
+        {
+            Id = review.Id,
+            Title = review.Title,
+            Comment = review.Comment,
+            Rating = review.Rating,
+            CreatedAt = review.CreatedAt,
+            UpdatedAt = review.UpdatedAt,
+            ProductId = review.ProductId,
+            UserId = review.UserId,
+            User = new UserSummaryDto
+            {
+                Id = user.Id,
+                UserName = user.UserName ?? "",
+                Email = user.Email ?? ""
+            }
+        };
 
-        return CreatedAtAction(nameof(GetReview), new { id = review.Id }, createdReview);
+        return CreatedAtAction(nameof(GetReview), new { id = review.Id }, createdReviewDto);
     }
 
     [HttpPut("{id}")]
